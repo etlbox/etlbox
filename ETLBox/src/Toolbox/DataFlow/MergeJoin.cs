@@ -94,10 +94,7 @@ namespace ALE.ETLBox.DataFlow
             TargetBlock.Completion.Wait();
         }
 
-        public async Task Completion()
-        {
-            await TargetBlock.Completion;
-        }
+        public Task Completion => TargetBlock.Completion;
 
         public MergeJoinTarget(ITask parent, ITargetBlock<TInput> joinTarget)
         {
@@ -105,7 +102,6 @@ namespace ALE.ETLBox.DataFlow
             CopyTaskProperties(parent);
 
         }
-
     }
 
     /// <summary>

@@ -183,7 +183,7 @@ namespace ALE.ETLBoxTests.Logging
             DBDestination dest = new DBDestination(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
-            Task destT = dest.Completion();
+            Task destT = dest.Completion;
 
             //Assert
             sourceT.Wait();

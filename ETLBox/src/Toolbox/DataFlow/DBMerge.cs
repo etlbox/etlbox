@@ -203,7 +203,7 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void Wait() => DestinationTable.Wait();
-        public async Task Completion() => await DestinationTable.Completion();
+        public async Task Completion() => await DestinationTable.Completion;
 
         public IDataFlowLinkSource<TInput> LinkTo(IDataFlowLinkTarget<TInput> target)
             => OutputSource.LinkTo(target);

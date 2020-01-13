@@ -54,7 +54,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             DBDestination<MySimpleRow> dest = new DBDestination<MySimpleRow>(SqlConnection, "Destination4CustomSource");
             source.LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
-            Task destT = dest.Completion();
+            Task destT = dest.Completion;
 
             //Assert
             Assert.True(RowCountTask.Count(SqlConnection, "Destination4CustomSource") == 0);
@@ -80,7 +80,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Assert.Throws<ETLBoxException>(() =>
             {
                 Task sourceT = source.ExecuteAsync();
-                Task destT = dest.Completion();
+                Task destT = dest.Completion;
                 try
                 {
                     sourceT.Wait();

@@ -10,7 +10,7 @@ namespace ALE.ETLBox.DataFlow
     /// <typeparam name="TInput">Type of datasoure input.</typeparam>
     public class CustomDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput>
     {
-
+        private Task targetActionCompletionTask;
         /* ITask Interface */
         public override string TaskName { get; set; } = $"Write data into custom target";
 
@@ -26,7 +26,7 @@ namespace ALE.ETLBox.DataFlow
             {
                 _writeAction = value;
                 TargetActionBlock = new ActionBlock<TInput>(AddLogging(_writeAction));
-
+                targetActionCompletionTask = TargetActionBlock.Completion.ContinueWith(t => CleanUp());
             }
         }
 
@@ -57,15 +57,10 @@ namespace ALE.ETLBox.DataFlow
 
         public void Wait()
         {
-            TargetActionBlock.Completion.Wait();
-            CleanUp();
+            targetActionCompletionTask.Wait();
         }
 
-        public async Task Completion()
-        {
-            await TargetActionBlock.Completion;
-            CleanUp();
-        }
+        public Task Completion => targetActionCompletionTask;
 
         private void CleanUp()
         {

@@ -45,7 +45,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Act
             source.LinkTo(trans1).LinkTo(trans2).LinkTo(trans3).LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
-            Task destT = dest.Completion();
+            Task destT = dest.Completion;
 
             //Assert
             sourceT.Wait();
@@ -69,7 +69,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Act
             source.LinkTo(trans1, row => row.Col1 < 4, row => row.Col1 >= 4).LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
-            Task destT = dest.Completion();
+            Task destT = dest.Completion;
 
             //Assert
             sourceT.Wait();

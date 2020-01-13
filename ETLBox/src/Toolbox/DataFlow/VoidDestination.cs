@@ -26,7 +26,7 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void Wait() => _voidDestination.Wait();
-        public async Task Completion() => await _voidDestination.Completion();
+        public Task Completion => _voidDestination.Completion;
     }
 
     /// <summary>
