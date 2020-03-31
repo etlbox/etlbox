@@ -4,20 +4,36 @@ using System.Threading.Tasks.Dataflow;
 
 namespace ALE.ETLBox.DataFlow
 {
-    public abstract class DataFlowBatchDestination<TInput> : DataFlowDestination<TInput[]>, ITask, IDataFlowDestination<TInput>
+    public abstract class DataFlowBatchDestination<TInput> :
+        DataFlowDestination<TInput[]>,
+        IDataFlowBatchDestination<TInput>
     {
+        protected DataFlowBatchDestination(int batchSize = DefaultBatchSize) =>
+            BatchSize = batchSize;
+
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
         public new ITargetBlock<TInput> TargetBlock => Buffer;
+
+        #region BatchSize
+
+        public const int DefaultBatchSize = 1000;
+
+        /// <summary>
+        /// <see cref="IDataFlowBatchDestination{TInput}.BatchSize"/>
+        /// </summary>
         public int BatchSize
         {
-            get { return batchSize; }
+            get => batchSize;
             set
             {
-                batchSize = value;
                 InitObjects(batchSize);
+                batchSize = value;
             }
         }
+
         private int batchSize;
+
+        #endregion
 
         public new void AddPredecessorCompletion(Task completion)
         {

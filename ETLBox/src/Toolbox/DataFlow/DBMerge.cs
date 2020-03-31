@@ -18,7 +18,7 @@ namespace ALE.ETLBox.DataFlow
     /// </example>
     public class DbMerge<TInput> :
         DataFlowTransformation<TInput, TInput>,
-        IDataFlowDestination<TInput>,
+        IDataFlowBatchDestination<TInput>,
         IDataFlowTransformation<TInput, TInput>
         where TInput : IMergeableRow, new()
     {
@@ -58,6 +58,11 @@ namespace ALE.ETLBox.DataFlow
                 _useTruncateMethod = value;
             }
         }
+        public int BatchSize
+        {
+            get => DestinationTable.BatchSize;
+            set => DestinationTable.BatchSize = value;
+        }
 
         /* Private stuff */
         bool _useTruncateMethod;
@@ -72,22 +77,23 @@ namespace ALE.ETLBox.DataFlow
         bool WasTruncationExecuted { get; set; }
         DBMergeTypeInfo TypeInfo { get; set; }
 
-        public DbMerge(string tableName)
+        public DbMerge(string tableName, int batchSize = DbDestination.DefaultBatchSize)
         {
             TableName = tableName;
-            Init();
+            Init(batchSize);
         }
 
-        public DbMerge(IConnectionManager connectionManager, string tableName) : this(tableName)
+        public DbMerge(IConnectionManager connectionManager, string tableName, int batchSize = DbDestination.DefaultBatchSize) :
+            this(tableName, batchSize)
         {
             ConnectionManager = connectionManager;
         }
 
-        private void Init()
+        private void Init(int batchSize)
         {
             TypeInfo = new DBMergeTypeInfo(typeof(TInput));
             DestinationTableAsSource = new DbSource<TInput>(ConnectionManager, TableName);
-            DestinationTable = new DbDestination<TInput>(ConnectionManager, TableName);
+            DestinationTable = new DbDestination<TInput>(ConnectionManager, TableName, batchSize);
             InitInternalFlow();
             InitOutputFlow();
         }

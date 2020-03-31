@@ -18,7 +18,8 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class DbDestination<TInput> : DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
+    public class DbDestination<TInput> :
+        DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
         /* ITask Interface */
         public override string TaskName => $"Write data into table {DestinationTableDefinition?.Name ?? TableName}";
@@ -29,36 +30,14 @@ namespace ALE.ETLBox.DataFlow
         public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
         internal TypeInfo TypeInfo { get; set; }
 
-
-        internal const int DEFAULT_BATCH_SIZE = 1000;
-
-
-        public DbDestination()
-        {
-            BatchSize = DEFAULT_BATCH_SIZE;
-        }
-
-        public DbDestination(int batchSize)
-        {
-            BatchSize = batchSize;
-        }
-
-        public DbDestination(string tableName) : this()
+        public DbDestination(string tableName = null, int batchSize = DefaultBatchSize) :
+            base(batchSize)
         {
             TableName = tableName;
         }
 
-        public DbDestination(IConnectionManager connectionManager, string tableName) : this(tableName)
-        {
-            ConnectionManager = connectionManager;
-        }
-
-        public DbDestination(string tableName, int batchSize) : this(batchSize)
-        {
-            TableName = tableName;
-        }
-
-        public DbDestination(IConnectionManager connectionManager, string tableName, int batchSize) : this(tableName, batchSize)
+        public DbDestination(IConnectionManager connectionManager, string tableName = null, int batchSize = DefaultBatchSize) :
+            this(tableName, batchSize)
         {
             ConnectionManager = connectionManager;
         }
@@ -108,7 +87,7 @@ namespace ALE.ETLBox.DataFlow
 
         private TableData<TInput> CreateTableDataObject(ref TInput[] data)
         {
-            TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, DEFAULT_BATCH_SIZE);
+            TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, DefaultBatchSize);
             td.Rows = ConvertRows(ref data);
             if (TypeInfo.IsDynamic && data.Length > 0)
                 foreach (var column in (IDictionary<string, object>)data[0])
@@ -167,19 +146,15 @@ namespace ALE.ETLBox.DataFlow
     /// dest.Wait(); //Wait for all data to arrive
     /// </code>
     /// </example>
-    public class DbDestination : DbDestination<ExpandoObject>
+    public class DbDestination :
+        DbDestination<ExpandoObject>
     {
-        public DbDestination() : base() { }
+        public DbDestination(IConnectionManager connectionManager, string tableName = null, int batchSize = DefaultBatchSize) :
+            base(connectionManager, tableName, batchSize)
+        { }
 
-        public DbDestination(int batchSize) : base(batchSize) { }
-
-        public DbDestination(string tableName) : base(tableName) { }
-
-        public DbDestination(IConnectionManager connectionManager, string tableName) : base(connectionManager, tableName) { }
-
-        public DbDestination(string tableName, int batchSize) : base(tableName, batchSize) { }
-
-        public DbDestination(IConnectionManager connectionManager, string tableName, int batchSize) : base(connectionManager, tableName, batchSize) { }
+        public DbDestination(string tableName = null, int batchSize = DefaultBatchSize) :
+            base(tableName, batchSize)
+        { }
     }
-
 }

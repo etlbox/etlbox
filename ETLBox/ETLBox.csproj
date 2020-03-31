@@ -13,13 +13,11 @@
     <PackageTags>etl elt ssis dataflow controlflow data integration</PackageTags>
     <PackageReleaseNotes>Fixing bug when passing schema/table name with special character. Fixed bug in output for new GetNextUri / HasNextUri in Stream Sources. Improved exceptions.
 </PackageReleaseNotes>
-    <Version>1.8.3</Version>
+    <Version>1.9.0</Version>
     <PackageIconUrl></PackageIconUrl>
     <PackageIcon>logo_bw.png</PackageIcon>
     <Authors>Andreas Lennartz</Authors>
     <Company>ALE</Company>
-    <AssemblyVersion>1.8.3.0</AssemblyVersion>
-    <FileVersion>1.8.3.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RootNamespace>ALE.ETLBox</RootNamespace>
   </PropertyGroup>
