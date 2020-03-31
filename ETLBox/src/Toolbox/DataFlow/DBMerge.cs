@@ -16,7 +16,11 @@ namespace ALE.ETLBox.DataFlow
     /// <code>
     /// </code>
     /// </example>
-    public class DbMerge<TInput> : DataFlowTransformation<TInput, TInput>, ITask, IDataFlowTransformation<TInput, TInput> where TInput : IMergeableRow, new()
+    public class DbMerge<TInput> :
+        DataFlowTransformation<TInput, TInput>,
+        IDataFlowDestination<TInput>,
+        IDataFlowTransformation<TInput, TInput>
+        where TInput : IMergeableRow, new()
     {
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, Upsert or delete in destination";
@@ -228,13 +232,6 @@ namespace ALE.ETLBox.DataFlow
         }
 
         public void Wait() => DestinationTable.Wait();
-        public async Task Completion() => await DestinationTable.Completion;
-    }
-
-    public enum DeltaMode
-    {
-        Full = 0,
-        NoDeletions = 1,
-        Delta = 2,
+        public Task Completion => DestinationTable.Completion;
     }
 }
