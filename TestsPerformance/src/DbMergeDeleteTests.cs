@@ -49,7 +49,7 @@ namespace ALE.ETLBoxTests.Performance
             List<MyMergeRow> knownGuids = CreateTestData(rowsInSource);
             TransferTestDataIntoDestination(knownGuids);
             MemorySource<MyMergeRow> source = AddNewTestData(rowsInDest, knownGuids);
-            DbMerge<MyMergeRow> mergeDest = new DbMerge<MyMergeRow>(SqlConnection, "MergeDestination");
+            DbMerge<MyMergeRow> mergeDest = new DbMerge<MyMergeRow>("MergeDestination", SqlConnection);
             source.LinkTo(mergeDest);
 
             //Act
@@ -93,7 +93,7 @@ namespace ALE.ETLBoxTests.Performance
         {
             MemorySource<MyMergeRow> source = new MemorySource<MyMergeRow>();
             source.Data = knownGuids;
-            DbDestination<MyMergeRow> dest = new DbDestination<MyMergeRow>(SqlConnection, "MergeDestination");
+            DbDestination<MyMergeRow> dest = new DbDestination<MyMergeRow>("MergeDestination", SqlConnection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

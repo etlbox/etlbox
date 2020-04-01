@@ -75,7 +75,7 @@ namespace ALE.ETLBoxTests.Logging
                             (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)");
 
             DbSource source = new DbSource("DFLogSource", NoLogConnection);
-            DbDestination dest = new DbDestination(LoggingConnection, "DFLogDestination");
+            DbDestination dest = new DbDestination("DFLogDestination", LoggingConnection);
 
             //Act
             source.LinkTo(dest);

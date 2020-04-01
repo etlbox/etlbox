@@ -71,9 +71,9 @@ namespace ALE.ETLBoxTests.Performance
             ReCreateDestinationTable(connection, "CsvDestinationGenericETLBox");
 
             var sourceNonGeneric = new CsvSource(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
-            var destNonGeneric = new DbDestination(connection, "CsvDestinationNonGenericETLBox", batchSize);
+            var destNonGeneric = new DbDestination("CsvDestinationNonGenericETLBox", connection, batchSize);
             var sourceGeneric = new CsvSource<CSVData>(BigDataCsvSource.GetCompleteFilePath(numberOfRows));
-            var destGeneric = new DbDestination<CSVData>(connection, "CsvDestinationGenericETLBox", batchSize);
+            var destGeneric = new DbDestination<CSVData>("CsvDestinationGenericETLBox", connection, batchSize);
 
             //Act
             var timeElapsedBulkInsert = GetBulkInsertTime(connection, numberOfRows);

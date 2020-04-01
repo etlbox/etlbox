@@ -66,7 +66,7 @@ namespace ALE.ETLBoxTests.Logging
             InsertTestData("DbSource");
             CreateTestTable("DbDestination");
             DbSource source = new DbSource("DbSource", SqlConnection);
-            DbDestination dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
+            DbDestination dest = new DbDestination("DbDestination", SqlConnection, batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 3;
@@ -96,7 +96,7 @@ namespace ALE.ETLBoxTests.Logging
             InsertTestData("DbSource");
             CreateTestTable("DbDestination");
             DbSource source = new DbSource("DbSource", SqlConnection);
-            DbDestination dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
+            DbDestination dest = new DbDestination("DbDestination", SqlConnection, batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 0;
@@ -121,7 +121,7 @@ namespace ALE.ETLBoxTests.Logging
             InsertTestData("DbSource");
             CreateTestTable("DbDestination");
             DbSource source = new DbSource("DbSource", SqlConnection);
-            DbDestination dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
+            DbDestination dest = new DbDestination("DbDestination", SqlConnection, batchSize: 3);
             RowTransformation rowTrans = new RowTransformation(row => row);
 
             //Act
@@ -145,7 +145,7 @@ namespace ALE.ETLBoxTests.Logging
             //Arrange
             CreateTestTable("DbDestination");
             CsvSource<string[]> source = new CsvSource<string[]>("res/DataFlowLogging/TwoColumns.csv");
-            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "DbDestination", batchSize: 3);
+            DbDestination<string[]> dest = new DbDestination<string[]>("DbDestination", SqlConnection, batchSize: 3);
 
             //Act
             DataFlow.LoggingThresholdRows = 2;
@@ -181,7 +181,7 @@ namespace ALE.ETLBoxTests.Logging
 
             //Act
             CustomSource source = new CustomSource(ReadData, EndOfData);
-            DbDestination dest = new DbDestination(SqlConnection, "Destination4CustomSource");
+            DbDestination dest = new DbDestination("Destination4CustomSource", SqlConnection);
             source.LinkTo(dest);
             Task sourceT = source.ExecuteAsync();
             Task destT = dest.Completion;
