@@ -4,10 +4,9 @@ using System.Data;
 
 namespace ALE.ETLBox
 {
-
     public interface ITableData : IDisposable, IDataReader
     {
         IColumnMappingCollection ColumnMapping { get; }
-        List<object[]> Rows { get; }
+        IReadOnlyList<IReadOnlyList<object>> Rows { get; }
     }
 }

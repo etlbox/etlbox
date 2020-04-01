@@ -8,23 +8,21 @@ namespace ALE.ETLBox
 {
     public class TableData : TableData<object[]>
     {
-        public TableData(TableDefinition definition) : base(definition) { }
-        public TableData(TableDefinition definition, int estimatedBatchSize) : base(definition, estimatedBatchSize) { }
+        public TableData(TableDefinition definition, List<object[]> rows = null) :
+            base(definition, rows)
+        { }
     }
 
     public class TableData<T> : ITableData
     {
-        public int? EstimatedBatchSize { get; set; }
-        public IColumnMappingCollection ColumnMapping
+        public TableData(TableDefinition definition, List<object[]> rows = null)
         {
-            get
-            {
-                if (HasDefinition)
-                    return GetColumnMappingFromDefinition();
-                else
-                    throw new ETLBoxException("No table definition found. For Bulk insert a TableDefinition is always needed.");
-            }
+            Definition = definition ?? throw new ArgumentNullException(nameof(definition));
+            Rows = rows ?? new List<object[]>();
+            typeInfo = new DBTypeInfo(typeof(T));
         }
+
+        public IColumnMappingCollection ColumnMapping => GetColumnMappingFromDefinition();
 
         private IColumnMappingCollection GetColumnMappingFromDefinition()
         {
@@ -32,12 +30,12 @@ namespace ALE.ETLBox
             foreach (var col in Definition.Columns)
                 if (!col.IsIdentity)
                 {
-                    if (TypeInfo != null && !TypeInfo.IsDynamic && !TypeInfo.IsArray)
+                    if (!typeInfo.IsDynamic && !typeInfo.IsArray)
                     {
-                        if (TypeInfo.HasPropertyOrColumnMapping(col.Name))
+                        if (typeInfo.HasPropertyOrColumnMapping(col.Name))
                             mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
                     }
-                    else if (TypeInfo.IsDynamic)
+                    else if (typeInfo.IsDynamic)
                     {
                         if (DynamicColumnNames.Contains(col.Name))
                             mapping.Add(new DataColumnMapping(col.SourceColumn, col.DataSetColumn));
@@ -50,32 +48,31 @@ namespace ALE.ETLBox
             return mapping;
         }
 
-        public List<object[]> Rows { get; set; }
-        public object[] CurrentRow { get; set; }
-        public List<string> DynamicColumnNames { get; set; } = new List<string>();
-        int ReadIndex { get; set; }
-        TableDefinition Definition { get; set; }
-        public bool HasDefinition => Definition != null;
-        DBTypeInfo TypeInfo { get; set; }
-        int? IDColumnIndex { get; set; }
+        #region Rows
+
+        public List<object[]> Rows
+        {
+            get => rows;
+            set
+            {
+                if (value is null)
+                    throw new ArgumentNullException(nameof(Rows));
+                rows = value;
+            }
+        }
+        IReadOnlyList<IReadOnlyList<object>> ITableData.Rows => Rows;
+
+        private List<object[]> rows;
+
+        #endregion
+
+        public object[] CurrentRow { get; private set; }
+        public List<string> DynamicColumnNames { get; } = new List<string>();
+        private int readIndex;
+        public TableDefinition Definition { get; }
+        private int? IDColumnIndex => Definition.IDColumnIndex;
         bool HasIDColumnIndex => IDColumnIndex != null;
-
-        public TableData(TableDefinition definition)
-        {
-            Definition = definition;
-            IDColumnIndex = Definition.IDColumnIndex;
-            Rows = new List<object[]>();
-            TypeInfo = new DBTypeInfo(typeof(T));
-        }
-
-        public TableData(TableDefinition definition, int estimatedBatchSize)
-        {
-            Definition = definition;
-            IDColumnIndex = Definition.IDColumnIndex;
-            EstimatedBatchSize = estimatedBatchSize;
-            Rows = new List<object[]>(estimatedBatchSize);
-            TypeInfo = new DBTypeInfo(typeof(T));
-        }
+        private readonly DBTypeInfo typeInfo;
 
         public object this[string name] => Rows[GetOrdinal(name)];
         public object this[int i] => Rows[i];
@@ -111,13 +108,13 @@ namespace ALE.ETLBox
 
         private int FindOrdinalInObject(string name)
         {
-            if (TypeInfo == null || TypeInfo.IsArray)
+            if (typeInfo.IsArray)
             {
                 return Definition.Columns.FindIndex(col => col.Name == name);
             }
-            else if (TypeInfo.IsDynamic)
+            else if (typeInfo.IsDynamic)
             {
-                int ix = DynamicColumnNames.FindIndex(n =>  n == name);
+                int ix = DynamicColumnNames.FindIndex(n => n == name);
                 if (HasIDColumnIndex)
                     if (ix >= IDColumnIndex) ix++;
                 return ix;
@@ -125,7 +122,7 @@ namespace ALE.ETLBox
             }
             else
             {
-                int ix = TypeInfo.GetIndexByPropertyNameOrColumnMapping(name);
+                int ix = typeInfo.GetIndexByPropertyNameOrColumnMapping(name);
                 if (HasIDColumnIndex)
                     if (ix >= IDColumnIndex) ix++;
                 return ix;
@@ -167,15 +164,15 @@ namespace ALE.ETLBox
 
         public bool NextResult()
         {
-            return (ReadIndex + 1) <= Rows?.Count;
+            return (readIndex + 1) <= Rows?.Count;
         }
 
         public bool Read()
         {
-            if (Rows?.Count > ReadIndex)
+            if (Rows.Count > readIndex)
             {
-                CurrentRow = Rows[ReadIndex];
-                ReadIndex++;
+                CurrentRow = Rows[readIndex];
+                readIndex++;
                 return true;
             }
             else
@@ -208,6 +205,7 @@ namespace ALE.ETLBox
         {
             Dispose();
         }
+
         #endregion
     }
 }

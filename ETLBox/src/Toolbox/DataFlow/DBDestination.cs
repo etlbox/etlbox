@@ -87,17 +87,16 @@ namespace ALE.ETLBox.DataFlow
 
         private TableData<TInput> CreateTableDataObject(ref TInput[] data)
         {
-            TableData<TInput> td = new TableData<TInput>(DestinationTableDefinition, BatchSize);
-            td.Rows = ConvertRows(ref data);
+            var rows = ConvertRows(ref data);
+            var td = new TableData<TInput>(DestinationTableDefinition, rows);
             if (TypeInfo.IsDynamic && data.Length > 0)
-                foreach (var column in (IDictionary<string, object>)data[0])
-                    td.DynamicColumnNames.Add(column.Key);
+                td.DynamicColumnNames.AddRange(((IDictionary<string, object>)data[0]).Keys);
             return td;
         }
 
         private List<object[]> ConvertRows(ref TInput[] data)
         {
-            List<object[]> result = new List<object[]>();
+            List<object[]> result = new List<object[]>(data.Length);
             foreach (var CurrentRow in data)
             {
                 if (CurrentRow == null) continue;

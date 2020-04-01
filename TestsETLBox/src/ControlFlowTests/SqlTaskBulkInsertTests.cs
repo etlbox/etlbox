@@ -31,13 +31,15 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Arrange
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(connection, "BulkInsert2Columns");
 
-            TableData<string[]> data = new TableData<string[]>(destTable.TableDefinition);
-            string[] values = { "1", "Test1" };
-            data.Rows.Add(values);
-            string[] values2 = { "2", "Test2" };
-            data.Rows.Add(values2);
-            string[] values3 = { "3", "Test3" };
-            data.Rows.Add(values3);
+            TableData<string[]> data = new TableData<string[]>(
+                destTable.TableDefinition,
+                new List<object[]>
+                {
+                    new []{ "1", "Test1" },
+                    new []{ "2", "Test2" },
+                    new []{ "3", "Test3" }
+                }
+                );
 
             //Act
             SqlTask.BulkInsert(connection, "Bulk insert demo data", data, "BulkInsert2Columns");
@@ -57,13 +59,14 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                 //Arrange
                 FourColumnsTableFixture destTable = new FourColumnsTableFixture(connection, "BulkInsert4Columns", identityIndex);
 
-                TableData data = new TableData(destTable.TableDefinition, 2);
-                object[] values = { "Test1", null, 1.2 };
-                data.Rows.Add(values);
-                object[] values2 = { "Test2", 4711, 1.23 };
-                data.Rows.Add(values2);
-                object[] values3 = { "Test3", 185, 1.234 };
-                data.Rows.Add(values3);
+                TableData data = new TableData(
+                    destTable.TableDefinition,
+                    new List<object[]>
+                    {
+                        new object[]{ "Test1", null, 1.2 },
+                        new object[]{ "Test2", 4711, 1.23 },
+                        new object[]{ "Test3", 185, 1.234 }
+                    });
 
                 //Act
                 SqlTask.BulkInsert(connection, "Bulk insert demo data", data, "BulkInsert4Columns");
