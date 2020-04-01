@@ -27,7 +27,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             string[] data = { "1", "2" };
             MemorySource<string[]> source = new MemorySource<string[]>();
             source.Data.Add(data);
-            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "UnknownTable");
+            DbDestination<string[]> dest = new DbDestination<string[]>("UnknownTable", SqlConnection);
             source.LinkTo(dest);
 
             //Act & Assert
@@ -59,11 +59,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             string[] data = { "1", "2" };
             MemorySource<string[]> source = new MemorySource<string[]>();
             source.Data.Add(data);
-            DbDestination<string[]> dest = new DbDestination<string[]>()
-            {
-                ConnectionManager = SqlConnection,
-                DestinationTableDefinition = def
-            };
+            DbDestination<string[]> dest = new DbDestination<string[]>(def, SqlConnection);
             source.LinkTo(dest);
 
             //Act & Assert

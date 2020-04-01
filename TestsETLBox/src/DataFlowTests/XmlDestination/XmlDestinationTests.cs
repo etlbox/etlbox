@@ -37,7 +37,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("XmlDestSimple");
             s2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "XmlDestSimple");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("XmlDestSimple", SqlConnection);
 
             //Act
             XmlDestination<MySimpleRow> dest = new XmlDestination<MySimpleRow>("./SimpleWithObject.xml", ResourceType.File);
@@ -65,7 +65,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("XmlDestOnlyAttributes");
             s2C.InsertTestDataSet3();
-            DbSource<MyAttributeRow> source = new DbSource<MyAttributeRow>(SqlConnection, "XmlDestOnlyAttributes");
+            DbSource<MyAttributeRow> source = new DbSource<MyAttributeRow>("XmlDestOnlyAttributes", SqlConnection);
 
             //Act
             XmlDestination<MyAttributeRow> dest = new XmlDestination<MyAttributeRow>("./SimpleOnlyAttributes.xml", ResourceType.File);

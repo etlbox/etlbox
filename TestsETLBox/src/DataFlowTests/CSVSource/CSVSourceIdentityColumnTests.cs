@@ -27,7 +27,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 0);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>("CsvDestination4Columns", Connection);
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
@@ -44,7 +44,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 2);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>("CsvDestination4Columns", Connection);
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");
@@ -62,7 +62,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture("CsvDestination4Columns", identityColumnIndex: 3);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "CsvDestination4Columns");
+            DbDestination<string[]> dest = new DbDestination<string[]>("CsvDestination4Columns", Connection);
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/CsvSource/ThreeColumnsNoId.csv");

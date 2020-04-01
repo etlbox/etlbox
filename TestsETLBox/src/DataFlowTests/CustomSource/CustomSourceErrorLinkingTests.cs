@@ -49,7 +49,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             Func<bool> EndOfData = () => _readIndex >= Data.Count;
 
             CustomSource<MySimpleRow> source = new CustomSource<MySimpleRow>(ReadData, EndOfData);
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "ErrorLinkingCustomSource");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("ErrorLinkingCustomSource", SqlConnection);
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act

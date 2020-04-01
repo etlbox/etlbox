@@ -44,7 +44,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvDestination2ColumnsClassMap");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CsvDestination2ColumnsClassMap");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("CsvDestination2ColumnsClassMap", Connection);
 
             //Act
             CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumns.csv");
@@ -80,7 +80,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             FourColumnsTableFixture d4c = new FourColumnsTableFixture("CsvDestination4ColumnsClassMap");
-            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(Connection, "CsvDestination4ColumnsClassMap");
+            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>("CsvDestination4ColumnsClassMap", Connection);
 
             //Act
             CsvSource<MyExtendedRow> source = new CsvSource<MyExtendedRow>("res/CsvSource/FourColumnsInvalidHeader.csv");

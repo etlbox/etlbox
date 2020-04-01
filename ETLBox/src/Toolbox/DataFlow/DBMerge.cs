@@ -22,6 +22,18 @@ namespace ALE.ETLBox.DataFlow
         IDataFlowTransformation<TInput, TInput>
         where TInput : IMergeableRow, new()
     {
+        public DbMerge(TableDefinition tableDefinition, IConnectionManager connectionManager = null, int batchSize = DbDestination.DefaultBatchSize) :
+            base(connectionManager)
+        {
+            this.TableDefinition = tableDefinition ?? throw new ArgumentNullException(nameof(tableDefinition));
+            tableDefinition.ValidateName(nameof(tableDefinition));
+            typeInfo = new DBMergeTypeInfo(typeof(TInput));
+            DestinationTableAsSource = new DbSource<TInput>(tableDefinition, connectionManager);
+            DestinationTable = new DbDestination<TInput>(tableDefinition, connectionManager, batchSize: batchSize);
+            InitInternalFlow();
+            InitOutputFlow();
+        }
+
         /* ITask Interface */
         public override string TaskName { get; set; } = "Insert, Upsert or delete in destination";
 
@@ -33,14 +45,7 @@ namespace ALE.ETLBox.DataFlow
         public override ITargetBlock<TInput> TargetBlock => Lookup.TargetBlock;
         public DeltaMode DeltaMode { get; set; }
 
-        #region Table
-
-        public TableDefinition TableDefinition { get; }
-        public string TableName => tableName ?? TableDefinition?.Name;
-
-        private readonly string tableName;
-
-        #endregion
+        protected readonly TableDefinition TableDefinition;
 
         public override IConnectionManager ConnectionManager
         {
@@ -74,7 +79,7 @@ namespace ALE.ETLBox.DataFlow
         /* Private stuff */
         bool _useTruncateMethod;
 
-        ObjectNameDescriptor TN => new ObjectNameDescriptor(TableName, ConnectionType);
+        ObjectNameDescriptor TN => new ObjectNameDescriptor(TableDefinition.Name, ConnectionType);
         LookupTransformation<TInput, TInput> Lookup { get; set; }
         DbSource<TInput> DestinationTableAsSource { get; set; }
         DbDestination<TInput> DestinationTable { get; set; }
@@ -83,42 +88,6 @@ namespace ALE.ETLBox.DataFlow
         CustomSource<TInput> OutputSource { get; set; }
         bool WasTruncationExecuted { get; set; }
         private readonly DBMergeTypeInfo typeInfo;
-
-        public DbMerge(string tableName, int batchSize = DbDestination.DefaultBatchSize) :
-            this(new TableDefinition(tableName), batchSize)
-        { }
-
-        public DbMerge(TableDefinition tableDefinition, int batchSize = DbDestination.DefaultBatchSize)
-        {
-            if (tableDefinition is null)
-                throw new ArgumentNullException(nameof(tableDefinition));
-            if (string.IsNullOrWhiteSpace(tableDefinition.Name))
-                throw new ArgumentException("Table name is required");
-            TableDefinition = tableDefinition;
-            typeInfo = new DBMergeTypeInfo(typeof(TInput));
-            DestinationTableAsSource = new DbSource<TInput>(ConnectionManager)
-            {
-                SourceTableDefinition = tableDefinition
-            };
-            DestinationTable = new DbDestination<TInput>(ConnectionManager, batchSize: batchSize)
-            {
-                DestinationTableDefinition = tableDefinition
-            };
-            InitInternalFlow();
-            InitOutputFlow();
-        }
-
-        public DbMerge(IConnectionManager connectionManager, string tableName, int batchSize = DbDestination.DefaultBatchSize) :
-            this(tableName, batchSize)
-        {
-            ConnectionManager = connectionManager;
-        }
-
-        public DbMerge(IConnectionManager connectionManager, TableDefinition tableDefinition, int batchSize = DbDestination.DefaultBatchSize) :
-            this(tableDefinition, batchSize)
-        {
-            ConnectionManager = connectionManager;
-        }
 
         private void InitInternalFlow()
         {
@@ -211,7 +180,7 @@ namespace ALE.ETLBox.DataFlow
             if (WasTruncationExecuted == true) return;
             WasTruncationExecuted = true;
             if (DeltaMode == DeltaMode.NoDeletions == true) return;
-            TruncateTableTask.Truncate(this.ConnectionManager, TableName);
+            TruncateTableTask.Truncate(this.ConnectionManager, TableDefinition.Name);
         }
 
         void IdentifyAndDeleteMissingEntries()

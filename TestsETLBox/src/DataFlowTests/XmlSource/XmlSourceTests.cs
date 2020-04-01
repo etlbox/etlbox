@@ -35,7 +35,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("XmlSource2Cols");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "XmlSource2Cols");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("XmlSource2Cols", Connection);
 
             //Act
             XmlSource<MySimpleRow> source = new XmlSource<MySimpleRow>("res/XmlSource/TwoColumnsOnlyElements.xml", ResourceType.File);
@@ -61,7 +61,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("XmlSource2ColsAttribute");
-            DbDestination<MyAttributeRow> dest = new DbDestination<MyAttributeRow>(Connection, "XmlSource2ColsAttribute");
+            DbDestination<MyAttributeRow> dest = new DbDestination<MyAttributeRow>("XmlSource2ColsAttribute", Connection);
 
             //Actt
             XmlSource<MyAttributeRow> source = new XmlSource<MyAttributeRow>("res/XmlSource/TwoColumnsOnlyAttributes.xml", ResourceType.File);

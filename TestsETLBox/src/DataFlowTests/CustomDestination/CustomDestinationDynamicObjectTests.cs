@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CustomDestinationDynamicDestination");
 
             //Act
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "CustomDestinationDynamicSource");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("CustomDestinationDynamicSource", SqlConnection);
             CustomDestination<ExpandoObject> dest = new CustomDestination<ExpandoObject>(
                 row => {
                     dynamic r = row as ExpandoObject;

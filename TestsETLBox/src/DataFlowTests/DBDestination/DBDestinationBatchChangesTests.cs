@@ -28,7 +28,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DbDestinationBatchChanges");
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "DbDestinationBatchChanges", batchSize: 2)
+            DbDestination<string[]> dest = new DbDestination<string[]>("DbDestinationBatchChanges", connection, batchSize: 2)
             {
                 BeforeBatchWrite = rowArray =>
                                    {

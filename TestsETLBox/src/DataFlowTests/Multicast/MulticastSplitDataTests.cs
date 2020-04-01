@@ -72,8 +72,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 };
             });
 
-            var destination1 = new DbDestination<Entity1>(Connection, "SplitDataDestination1");
-            var destination2 = new DbDestination<Entity2>(Connection, "SplitDataDestination2");
+            var destination1 = new DbDestination<Entity1>("SplitDataDestination1", Connection);
+            var destination2 = new DbDestination<Entity2>("SplitDataDestination2", Connection);
 
             //Act
             source.LinkTo(multicast);

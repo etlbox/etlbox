@@ -31,8 +31,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DestinationDynamic2Cols");
 
             //Act
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceDynamic4Cols");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamic2Cols");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("SourceDynamic4Cols", connection);
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("DestinationDynamic2Cols", connection);
 
             source.LinkTo(dest);
             source.Execute();
@@ -57,8 +57,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 });
 
             //Act
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceDynamicDiffCols");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamicDiffCols");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("SourceDynamicDiffCols", connection);
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("DestinationDynamicDiffCols", connection);
 
             source.LinkTo(dest);
             source.Execute();
@@ -88,8 +88,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 });
 
             //Act
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceDynamicIDCol");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationDynamicIdCol");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("SourceDynamicIDCol", connection);
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("DestinationDynamicIdCol", connection);
 
             source.LinkTo(dest);
             source.Execute();

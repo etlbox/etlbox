@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSource2Cols");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CsvSource2Cols");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("CsvSource2Cols", Connection);
 
             //Act
             CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumns.csv");
@@ -53,7 +53,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceSkipRows");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CsvSourceSkipRows");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("CsvSourceSkipRows", Connection);
 
             //Act
             CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumnsSkipRows.csv");

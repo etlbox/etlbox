@@ -36,8 +36,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DbDestinationSimple");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DbSourceView");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DbDestinationSimple");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("DbSourceView", connection);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("DbDestinationSimple", connection);
 
             source.LinkTo(dest);
             source.Execute();
@@ -64,8 +64,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             FourColumnsTableFixture d4c = new FourColumnsTableFixture(connection, "DbDestinationExtended", 1);
 
             //Act
-            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(connection, "DbSourceViewExtended");
-            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(connection, "DbDestinationExtended");
+            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>("DbSourceViewExtended", connection);
+            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>("DbDestinationExtended", connection);
 
             source.LinkTo(dest);
             source.Execute();

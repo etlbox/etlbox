@@ -68,8 +68,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(destConnection, "Destination");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(sourceConnection, "Source");
-            DbDestination<string[]> dest = new DbDestination<string[]>(destConnection, "Destination");
+            DbSource<string[]> source = new DbSource<string[]>("Source", sourceConnection);
+            DbDestination<string[]> dest = new DbDestination<string[]>("Destination", destConnection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

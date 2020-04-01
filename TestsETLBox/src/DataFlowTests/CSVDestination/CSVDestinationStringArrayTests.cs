@@ -30,7 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestSimpleNonGeneric");
             s2C.InsertTestDataSet3();
-            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "CSVDestSimpleNonGeneric");
+            DbSource<string[]> source = new DbSource<string[]>("CSVDestSimpleNonGeneric", SqlConnection);
 
             //Act
             CsvDestination<string[]> dest = new CsvDestination<string[]>("./SimpleNonGeneric.csv");

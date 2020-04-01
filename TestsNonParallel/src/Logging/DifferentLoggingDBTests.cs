@@ -74,7 +74,7 @@ namespace ALE.ETLBoxTests.Logging
             SqlTask.ExecuteNonQuery(LoggingConnection, "Create source table", @"CREATE TABLE DFLogDestination
                             (Col1 INT NOT NULL, Col2 NVARCHAR(50) NULL)");
 
-            DbSource source = new DbSource(NoLogConnection, "DFLogSource");
+            DbSource source = new DbSource("DFLogSource", NoLogConnection);
             DbDestination dest = new DbDestination(LoggingConnection, "DFLogDestination");
 
             //Act

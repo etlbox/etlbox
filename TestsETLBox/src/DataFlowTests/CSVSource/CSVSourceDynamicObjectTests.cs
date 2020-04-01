@@ -29,7 +29,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceDynamic");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "CsvSourceDynamic");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("CsvSourceDynamic", SqlConnection);
 
             //Act
             CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>("res/CsvSource/TwoColumnsForDynamic.csv");
@@ -46,7 +46,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceDynamicColsInSource");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "CsvSourceDynamicColsInSource");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("CsvSourceDynamicColsInSource", SqlConnection);
 
             //Act
             CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>("res/CsvSource/FourColumnsForDynamic.csv");
@@ -69,7 +69,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     new TableColumn("Col1", "INT",allowNulls:true),
                     new TableColumn("ColX", "INT",allowNulls:true),
             });
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "CsvSourceDynamicColsInDest");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("CsvSourceDynamicColsInDest", SqlConnection);
 
             //Act
             CsvSource<ExpandoObject> source = new CsvSource<ExpandoObject>("res/CsvSource/TwoColumnsForDynamic.csv");

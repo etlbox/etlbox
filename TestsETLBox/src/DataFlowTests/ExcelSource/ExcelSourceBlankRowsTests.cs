@@ -85,7 +85,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             {
                 IgnoreBlankRows = true
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "ExcelDestinationBlankRows", 2);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("ExcelDestinationBlankRows", Connection, 2);
 
             source.LinkTo(dest);
             source.Execute();

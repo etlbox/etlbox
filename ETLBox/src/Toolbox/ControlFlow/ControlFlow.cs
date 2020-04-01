@@ -33,6 +33,8 @@ namespace ALE.ETLBox.ControlFlow
             }
         }
 
+        public static IConnectionManager DefaultIfNull(this IConnectionManager connectionManager) => connectionManager ?? DefaultDbConnection;
+
         /// <summary>
         /// If set to true, nothing will be logged by any control flow task or data flow component.
         /// When switched back to false, all tasks and components will continue to log.

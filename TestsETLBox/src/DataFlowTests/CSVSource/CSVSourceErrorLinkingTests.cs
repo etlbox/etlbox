@@ -32,7 +32,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceErrorLinking");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "CsvSourceErrorLinking");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("CsvSourceErrorLinking", SqlConnection);
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act

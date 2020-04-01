@@ -40,7 +40,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestSimple");
             s2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "CSVDestSimple");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("CSVDestSimple", SqlConnection);
 
             //Act
             CsvDestination<MySimpleRow> dest = new CsvDestination<MySimpleRow>("./SimpleWithObject.csv");

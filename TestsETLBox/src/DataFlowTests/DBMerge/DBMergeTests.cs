@@ -44,10 +44,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             s2c.InsertTestDataSet2();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDestination");
             d2c.InsertTestDataSet3();
-            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>("DBMergeSource", connection);
 
             //Act
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>("DBMergeDestination", connection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -69,10 +69,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             s2c.InsertTestData();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDestination");
             d2c.InsertTestDataSet3();
-            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>("DBMergeSource", connection);
 
             //Act
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>("DBMergeDestination", connection);
             dest.DeltaMode = DeltaMode.NoDeletions;
             //dest.DisableDeletion = true;
             source.LinkTo(dest);
@@ -95,10 +95,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             s2c.InsertTestData();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection, "DBMergeDestination");
             d2c.InsertTestDataSet3();
-            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(connection, "DBMergeSource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>("DBMergeSource", connection);
 
             //Act
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>("DBMergeDestination", connection);
             dest.UseTruncateMethod = true;
             source.LinkTo(dest);
             source.Execute();
@@ -121,10 +121,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeEmptySource");
             s2c.InsertTestData();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeEmptyDestination");
-            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(SqlConnection, "DBMergeEmptySource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>("DBMergeEmptySource", SqlConnection);
 
             //Act
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(SqlConnection, "DBMergeEmptyDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>("DBMergeEmptyDestination", SqlConnection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -140,10 +140,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture s2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeEmptySource");
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(SqlConnection, "DBMergeEmptyDestination");
             d2c.InsertTestData();
-            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>(SqlConnection, "DBMergeEmptySource");
+            DbSource<MyMergeRow> source = new DbSource<MyMergeRow>("DBMergeEmptySource", SqlConnection);
 
             //Act
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(SqlConnection, "DBMergeEmptyDestination");
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>("DBMergeEmptyDestination", SqlConnection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

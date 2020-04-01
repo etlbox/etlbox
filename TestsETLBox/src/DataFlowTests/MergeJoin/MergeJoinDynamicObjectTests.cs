@@ -32,9 +32,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Table.InsertTestDataSet2();
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture("MergeJoinDynamicDestination");
 
-            DbSource<ExpandoObject> source1 = new DbSource<ExpandoObject>(Connection, "MergeJoinDynamicSource1");
-            DbSource<ExpandoObject> source2 = new DbSource<ExpandoObject>(Connection, "MergeJoinDynamicSource2");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(Connection, "MergeJoinDynamicDestination");
+            DbSource<ExpandoObject> source1 = new DbSource<ExpandoObject>("MergeJoinDynamicSource1", Connection);
+            DbSource<ExpandoObject> source2 = new DbSource<ExpandoObject>("MergeJoinDynamicSource2", Connection);
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("MergeJoinDynamicDestination", Connection);
 
             //Act
             MergeJoin<ExpandoObject> join = new MergeJoin<ExpandoObject>(

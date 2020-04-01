@@ -29,7 +29,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SortSourceNonGeneric");
             source2Columns.InsertTestData();
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(Connection, "SortSourceNonGeneric");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("SortSourceNonGeneric", Connection);
 
             //Act
             List<ExpandoObject> actual = new List<ExpandoObject>();

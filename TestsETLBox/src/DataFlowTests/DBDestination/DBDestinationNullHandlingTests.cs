@@ -43,7 +43,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MySimpleRow() { Col1 = 3, Col2 = "Test3"},
                 null
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "DestIgnoreNullValues");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("DestIgnoreNullValues", SqlConnection);
 
 
             //Act
@@ -70,7 +70,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new string[] { "3", "Test3"},
                 null
             };
-            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "DestIgnoreNullValuesStringArray");
+            DbDestination<string[]> dest = new DbDestination<string[]>("DestIgnoreNullValuesStringArray", SqlConnection);
 
 
             //Act

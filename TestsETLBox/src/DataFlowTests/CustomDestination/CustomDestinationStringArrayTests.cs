@@ -30,7 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CustomDestinationNonGenericDestination");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "CustomDestinationNonGenericSource");
+            DbSource<string[]> source = new DbSource<string[]>("CustomDestinationNonGenericSource", SqlConnection);
             CustomDestination<string[]> dest = new CustomDestination<string[]>(
                 row => {
                     SqlTask.ExecuteNonQuery(SqlConnection, "Insert row",

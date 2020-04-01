@@ -28,7 +28,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("MemoryDestinationNonGeneric");
             MemorySource<string[]> source = new MemorySource<string[]>();
-            DbDestination<string[]> dest = new DbDestination<string[]>(SqlConnection, "MemoryDestinationNonGeneric");
+            DbDestination<string[]> dest = new DbDestination<string[]>("MemoryDestinationNonGeneric", SqlConnection);
 
             //Act
             source.Data = new List<string[]>()

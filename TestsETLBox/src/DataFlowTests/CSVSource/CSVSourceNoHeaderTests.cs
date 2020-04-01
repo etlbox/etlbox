@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         {
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CsvSourceNoHeader");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(Connection, "CsvSourceNoHeader");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("CsvSourceNoHeader", Connection);
 
             //Act
             CsvSource<MySimpleRow> source = new CsvSource<MySimpleRow>("res/CsvSource/TwoColumnsNoHeader.csv");

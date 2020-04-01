@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace ALE.ETLBox.ConnectionManager
@@ -84,9 +85,8 @@ namespace ALE.ETLBox.ConnectionManager
             return schemaTable;
         }
 
-        internal TableDefinition ReadTableDefinition(ObjectNameDescriptor TN)
+        internal void ReadTableDefinition(ObjectNameDescriptor TN, List<TableColumn> columns)
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
             DataTable schemaTable = GetSchemaDataTable(TN.UnquotatedFullName, "Columns");
 
             foreach (var row in schemaTable.Rows)
@@ -98,10 +98,8 @@ namespace ALE.ETLBox.ConnectionManager
                     DataType = dr[schemaTable.Columns["TYPE_NAME"]].ToString(),
                     AllowNulls = dr[schemaTable.Columns["IS_NULLABLE"]].ToString() == "YES" ? true : false
                 };
-                result.Columns.Add(col);
+                columns.Add(col);
             }
-
-            return result;
         }
 
         public override void BeforeBulkInsert(string tableName)

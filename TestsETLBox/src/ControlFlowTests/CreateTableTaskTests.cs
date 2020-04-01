@@ -59,7 +59,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             CreateTableTask.Create(connection, "CreateTable3", columns);
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable3"));
-            var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable3");
+            var td = TableDefinition.FromName(connection, "CreateTable3");
             Assert.Contains(td.Columns, col => col.AllowNulls);
         }
 
@@ -77,7 +77,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable4"));
-            var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable4");
+            var td = TableDefinition.FromName(connection, "CreateTable4");
             Assert.True(td.Columns.Where(col => col.IsPrimaryKey).Count() == 1);
         }
 
@@ -96,7 +96,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTablePKWithIDX"));
             Assert.True(IfIndexExistsTask.IsExisting(connection, "testidx", "CreateTablePKWithIDX"));
-            var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTablePKWithIDX");
+            var td = TableDefinition.FromName(connection, "CreateTablePKWithIDX");
             Assert.True(td.Columns.Where(col => col.IsPrimaryKey).Count() == 1);
         }
 
@@ -115,7 +115,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable41"));
-            var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable41");
+            var td = TableDefinition.FromName(connection, "CreateTable41");
             Assert.True(td.Columns.Where(col => col.IsPrimaryKey && col.Name.StartsWith("Id")).Count() == 2);
         }
 
@@ -157,7 +157,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable6"));
             if (connection.GetType() != typeof(SQLiteConnectionManager))
             {
-                var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable6");
+                var td = TableDefinition.FromName(connection, "CreateTable6");
                 Assert.Contains(td.Columns, col => col.IsIdentity);
             }
         }
@@ -179,7 +179,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(SqlConnection, "CreateTable7"));
-            var td = TableDefinition.GetDefinitionFromTableName(SqlConnection, "CreateTable7");
+            var td = TableDefinition.FromName(SqlConnection, "CreateTable7");
             Assert.Contains(td.Columns, col => col.IsIdentity && col.IdentityIncrement == 1000 && col.IdentitySeed == 50);
         }
 
@@ -196,7 +196,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             CreateTableTask.Create(connection, "CreateTable8", columns);
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable8"));
-            var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable8");
+            var td = TableDefinition.FromName(connection, "CreateTable8");
             Assert.Contains(td.Columns, col => col.DefaultValue == "0");
             Assert.Contains(td.Columns, col => col.DefaultValue == "Test" || col.DefaultValue == "'Test'");
             Assert.Contains(td.Columns, col => col.DefaultValue == "3.12");
@@ -221,7 +221,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
                 //Assert
                 Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "CreateTable9"));
-                var td = TableDefinition.GetDefinitionFromTableName(connection, "CreateTable9");
+                var td = TableDefinition.FromName(connection, "CreateTable9");
                 if (connection.GetType() == typeof(SqlConnectionManager))
                     Assert.Contains(td.Columns, col => col.ComputedColumn == "[value1]*[value2]");
                 else if (connection.GetType() == typeof(MySqlConnectionManager))
@@ -249,7 +249,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
 
             //Assert
             Assert.True(IfTableOrViewExistsTask.IsExisting(connection, tableName));
-            var td = TableDefinition.GetDefinitionFromTableName(connection, tableName);
+            var td = TableDefinition.FromName(connection, tableName);
             Assert.True(td.Columns.Where(col => col.IsPrimaryKey && col.Name.StartsWith("Id")).Count() == 2);
         }
 

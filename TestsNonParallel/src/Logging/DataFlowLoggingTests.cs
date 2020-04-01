@@ -65,7 +65,7 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DbSource");
             InsertTestData("DbSource");
             CreateTestTable("DbDestination");
-            DbSource source = new DbSource(SqlConnection, "DbSource");
+            DbSource source = new DbSource("DbSource", SqlConnection);
             DbDestination dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
 
             //Act
@@ -95,7 +95,7 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DbSource");
             InsertTestData("DbSource");
             CreateTestTable("DbDestination");
-            DbSource source = new DbSource(SqlConnection, "DbSource");
+            DbSource source = new DbSource("DbSource", SqlConnection);
             DbDestination dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
 
             //Act
@@ -120,7 +120,7 @@ namespace ALE.ETLBoxTests.Logging
             CreateTestTable("DbSource");
             InsertTestData("DbSource");
             CreateTestTable("DbDestination");
-            DbSource source = new DbSource(SqlConnection, "DbSource");
+            DbSource source = new DbSource("DbSource", SqlConnection);
             DbDestination dest = new DbDestination(SqlConnection, "DbDestination", batchSize: 3);
             RowTransformation rowTrans = new RowTransformation(row => row);
 

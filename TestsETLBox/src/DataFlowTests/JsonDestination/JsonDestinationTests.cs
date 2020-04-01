@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestSimple");
             s2C.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "JsonDestSimple");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("JsonDestSimple", SqlConnection);
 
             //Act
             JsonDestination<MySimpleRow> dest = new JsonDestination<MySimpleRow>("./SimpleWithObject.json", ResourceType.File);

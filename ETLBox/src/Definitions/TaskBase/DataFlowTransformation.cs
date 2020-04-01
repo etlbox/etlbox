@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.DataFlow;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,6 +9,10 @@ namespace ALE.ETLBox
 {
     public abstract class DataFlowTransformation<TInput, TOutput> : DataFlowTask, ITask, IDataFlowTransformation<TInput, TOutput>
     {
+        protected DataFlowTransformation(IConnectionManager connectionManager = null) :
+            base(connectionManager)
+        { }
+
         public virtual ITargetBlock<TInput> TargetBlock { get; }
         public virtual ISourceBlock<TOutput> SourceBlock { get; }
 

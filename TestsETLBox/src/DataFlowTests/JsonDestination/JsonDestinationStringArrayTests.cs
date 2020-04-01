@@ -30,7 +30,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("JsonDestSimpleNonGeneric");
             s2C.InsertTestDataSet3();
-            DbSource<string[]> source = new DbSource<string[]>(SqlConnection, "JsonDestSimpleNonGeneric");
+            DbSource<string[]> source = new DbSource<string[]>("JsonDestSimpleNonGeneric", SqlConnection);
 
             //Act
             JsonDestination<string[]> dest = new JsonDestination<string[]>("./SimpleNonGeneric.json", ResourceType.File);

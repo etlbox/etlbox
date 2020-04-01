@@ -89,10 +89,10 @@ ON DELETE CASCADE;");
             InsertTestData(connection, "FKSourceTable");
             AddFKConstraint(connection, "FKDestTable", "FKReferenceTable");
 
-            DbSource<MyRow> source = new DbSource<MyRow>(connection, "FKSourceTable");
+            DbSource<MyRow> source = new DbSource<MyRow>("FKSourceTable", connection);
 
             //Act
-            DbDestination<MyRow> dest = new DbDestination<MyRow>(connection, "FKDestTable");
+            DbDestination<MyRow> dest = new DbDestination<MyRow>("FKDestTable", connection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

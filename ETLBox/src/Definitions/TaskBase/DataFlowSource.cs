@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.ConnectionManager;
+using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -6,6 +7,10 @@ namespace ALE.ETLBox.DataFlow
 {
     public abstract class DataFlowSource<TOutput> : DataFlowTask, ITask
     {
+        protected DataFlowSource(IConnectionManager connectionManager = null) :
+            base(connectionManager)
+        { }
+
         public ISourceBlock<TOutput> SourceBlock => this.Buffer;
         protected BufferBlock<TOutput> Buffer { get; set; } = new BufferBlock<TOutput>();
 

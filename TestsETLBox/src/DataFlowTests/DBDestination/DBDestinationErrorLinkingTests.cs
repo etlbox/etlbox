@@ -45,7 +45,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 new MySimpleRow() { Col1 = null, Col2 = "ErrorRecord"},
                 new MySimpleRow() { Col1 = "3", Col2 = "Test3"},
             };
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DestLinkError", batchSize: 2);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("DestLinkError", connection, batchSize: 2);
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
 
             //Act

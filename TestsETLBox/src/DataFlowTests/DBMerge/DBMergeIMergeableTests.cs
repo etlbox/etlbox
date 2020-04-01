@@ -44,10 +44,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             s2c.InsertTestDataSet2();
             TwoColumnsTableFixture d2c = new TwoColumnsTableFixture(connection,"DBMergeDestination");
             d2c.InsertTestDataSet3();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBMergeSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("DBMergeSource", connection);
 
             //Act
-            DbMerge<MySimpleRow> dest = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
+            DbMerge<MySimpleRow> dest = new DbMerge<MySimpleRow>("DBMergeDestination", connection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -72,11 +72,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
             d2c.InsertTestDataSet3();
             TwoColumnsDeltaTableFixture delta2Columns = new TwoColumnsDeltaTableFixture(connection, "DBMergeDelta");
 
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DBMergeSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("DBMergeSource", connection);
 
             //Act
-            DbMerge<MySimpleRow> merge = new DbMerge<MySimpleRow>(connection, "DBMergeDestination");
-            DbDestination<MySimpleRow> delta = new DbDestination<MySimpleRow>(connection, "DBMergeDelta");
+            DbMerge<MySimpleRow> merge = new DbMerge<MySimpleRow>("DBMergeDestination", connection);
+            DbDestination<MySimpleRow> delta = new DbDestination<MySimpleRow>("DBMergeDelta", connection);
             source.LinkTo(merge);
             merge.LinkTo(delta);
             source.Execute();

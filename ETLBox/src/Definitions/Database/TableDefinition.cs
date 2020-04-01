@@ -7,10 +7,67 @@ using System.Linq;
 
 namespace ALE.ETLBox
 {
+    /// <summary>
+    /// Defines data table
+    /// </summary>
     public class TableDefinition
     {
+        #region Init
+
+        // Keep this constructor to allow new() type constraint for this type (for .NET.Core configuration system etc.)
+        public TableDefinition() :
+            this(null)
+        { }
+
+        public TableDefinition(string name, List<TableColumn> columns = null)
+        {
+            Name = name;
+            Columns = columns ?? new List<TableColumn>();
+        }
+
+        public static TableDefinition FromName(IConnectionManager connectionManager, string name)
+        {
+            Validate(connectionManager);
+            var result = new TableDefinition(name);
+            GetColumns(connectionManager, name, result.Columns);
+            return result;
+        }
+
+        public static implicit operator TableDefinition(string name) => new TableDefinition(name);
+
+        #endregion
+
+        #region Name
+
+        public bool HasName => IsValidName(Name);
         public string Name { get; set; }
-        public List<TableColumn> Columns { get; set; }
+
+        public static bool IsValidName(string name) => !string.IsNullOrWhiteSpace(name);
+        public static void ValidateName(string name, string argumentName = null)
+        {
+            if (IsValidName(name))
+                return;
+            if (argumentName is null)
+                argumentName = nameof(name);
+            if (name is null)
+                throw new ArgumentNullException(argumentName);
+            else
+                throw new ArgumentException("Value cannot be white space", argumentName);
+        }
+
+        public void ValidateName(string ownerName = null) => ValidateName(
+            Name,
+            ownerName is null ?
+                nameof(Name) :
+                $"{ownerName}.{nameof(Name)}"
+            );
+
+        #endregion
+
+        #region Columns
+
+        public bool HasColumns => Columns.Count > 0;
+        public List<TableColumn> Columns { get; }
         public int? IDColumnIndex
         {
             get
@@ -22,52 +79,40 @@ namespace ALE.ETLBox
                     return null;
             }
         }
-
         public string AllColumnsWithoutIdentity => Columns.Where(col => !col.IsIdentity).AsString();
 
-
-        public TableDefinition()
+        public bool EnsureColumns(IConnectionManager connectionManager)
         {
-            Columns = new List<TableColumn>();
+            Validate(connectionManager);
+            if (HasColumns)
+                return false;
+            GetColumns(connectionManager, Name, Columns);
+            return true;
         }
 
-        public TableDefinition(string name) : this()
+        private static void GetColumns(IConnectionManager connectionManager, string name, List<TableColumn> columns)
         {
-            Name = name;
-        }
-
-        public TableDefinition(string name, List<TableColumn> columns) : this(name)
-        {
-            Columns = columns;
-        }
-
-        public void CreateTable() => CreateTableTask.Create(this);
-
-        public void CreateTable(IConnectionManager connectionManager) => CreateTableTask.Create(connectionManager, this);
-
-        public static TableDefinition GetDefinitionFromTableName(IConnectionManager connection, string tableName)
-        {
-            IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connection, tableName);
-            ConnectionManagerType connectionType = ConnectionManagerSpecifics.GetType(connection);
-            ObjectNameDescriptor TN = new ObjectNameDescriptor(tableName, connectionType);
+            ValidateName(name);
+            IfTableOrViewExistsTask.ThrowExceptionIfNotExists(connectionManager, name);
+            ConnectionManagerType connectionType = ConnectionManagerSpecifics.GetType(connectionManager);
+            ObjectNameDescriptor TN = new ObjectNameDescriptor(name, connectionType);
 
             if (connectionType == ConnectionManagerType.SqlServer)
-                return ReadTableDefinitionFromSqlServer(connection, TN);
+                GetColumnsFromSqlServer(connectionManager, TN, columns);
             else if (connectionType == ConnectionManagerType.SQLite)
-                return ReadTableDefinitionFromSQLite(connection, TN);
+                GetColumnsFromSQLite(connectionManager, TN, columns);
             else if (connectionType == ConnectionManagerType.MySql)
-                return ReadTableDefinitionFromMySqlServer(connection, TN);
+                GetColumnsFromMySqlServer(connectionManager, TN, columns);
             else if (connectionType == ConnectionManagerType.Postgres)
-                return ReadTableDefinitionFromPostgres(connection, TN);
+                GetColumnsFromPostgres(connectionManager, TN, columns);
             else if (connectionType == ConnectionManagerType.Access)
-                return ReadTableDefinitionFromAccess(connection, TN);
+                GetColumnsFromAccess(connectionManager, TN, columns);
             else
                 throw new ETLBoxException("Unknown connection type - please pass a valid TableDefinition!");
         }
 
-        private static TableDefinition ReadTableDefinitionFromSqlServer(IConnectionManager connection, ObjectNameDescriptor TN)
+        private static void GetColumnsFromSqlServer(IConnectionManager connectionManager, ObjectNameDescriptor TN, List<TableColumn> columns)
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
@@ -113,7 +158,7 @@ WHERE ( CONCAt (sc.name,'.',tbl.name) ='{TN.UnquotatedFullName}' OR  tbl.name = 
 ORDER BY cols.column_id
 "
             , () => { curCol = new TableColumn(); }
-            , () => { result.Columns.Add(curCol); }
+            , () => { columns.Add(curCol); }
             , name => curCol.Name = name.ToString()
             , type_name => curCol.DataType = type_name.ToString()
             , is_nullable => curCol.AllowNulls = (bool)is_nullable
@@ -128,20 +173,18 @@ ORDER BY cols.column_id
              )
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = connectionManager
             };
             readMetaSql.ExecuteReader();
-            return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromSQLite(IConnectionManager connection, ObjectNameDescriptor TN)
+        private static void GetColumnsFromSQLite(IConnectionManager connectionManager, ObjectNameDescriptor TN, List<TableColumn> columns)
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
             var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
         $@"PRAGMA table_info(""{TN.UnquotatedFullName}"")"
             , () => { curCol = new TableColumn(); }
-            , () => { result.Columns.Add(curCol); }
+            , () => { columns.Add(curCol); }
             , cid => {; }
             , name => curCol.Name = name.ToString()
             , type => curCol.DataType = type.ToString()
@@ -151,15 +194,13 @@ ORDER BY cols.column_id
              )
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = connectionManager
             };
             readMetaSql.ExecuteReader();
-            return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromMySqlServer(IConnectionManager connection, ObjectNameDescriptor TN)
+        private static void GetColumnsFromMySqlServer(IConnectionManager connectionManager, ObjectNameDescriptor TN, List<TableColumn> columns)
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
@@ -188,7 +229,7 @@ WHERE ( cols.table_name = '{TN.UnquotatedFullName}'  OR  CONCAT(cols.table_catal
 ORDER BY cols.ordinal_position
 "
             , () => { curCol = new TableColumn(); }
-            , () => { result.Columns.Add(curCol); }
+            , () => { columns.Add(curCol); }
             , column_name => curCol.Name = column_name.ToString()
             , data_type => curCol.DataType = data_type.ToString()
             , is_nullable => curCol.AllowNulls = (int)is_nullable == 1 ? true : false
@@ -200,15 +241,13 @@ ORDER BY cols.ordinal_position
              )
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = connectionManager
             };
             readMetaSql.ExecuteReader();
-            return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromPostgres(IConnectionManager connection, ObjectNameDescriptor TN)
+        private static void GetColumnsFromPostgres(IConnectionManager connectionManager, ObjectNameDescriptor TN, List<TableColumn> columns)
         {
-            TableDefinition result = new TableDefinition(TN.ObjectName);
             TableColumn curCol = null;
 
             var readMetaSql = new SqlTask($"Read column meta data for table {TN.ObjectName}",
@@ -263,7 +302,7 @@ WHERE(cols.table_name = '{TN.UnquotatedFullName}'  OR  CONCAT(cols.table_schema,
 ORDER BY cols.ordinal_position
 "
             , () => { curCol = new TableColumn(); }
-            , () => { result.Columns.Add(curCol); }
+            , () => { columns.Add(curCol); }
             , column_name => curCol.Name = column_name.ToString()
             , internal_type_name => curCol.InternalDataType = internal_type_name.ToString()
             , data_type => curCol.DataType = data_type.ToString()
@@ -276,16 +315,31 @@ ORDER BY cols.ordinal_position
              )
             {
                 DisableLogging = true,
-                ConnectionManager = connection
+                ConnectionManager = connectionManager
             };
             readMetaSql.ExecuteReader();
-            return result;
         }
 
-        private static TableDefinition ReadTableDefinitionFromAccess(IConnectionManager connection, ObjectNameDescriptor TN)
+        private static void GetColumnsFromAccess(IConnectionManager connectionManager, ObjectNameDescriptor TN, List<TableColumn> columns)
         {
-            var accessConnection = connection as AccessOdbcConnectionManager;
-            return accessConnection?.ReadTableDefinition(TN);
+            var accessConnection = connectionManager as AccessOdbcConnectionManager;
+            accessConnection?.ReadTableDefinition(TN, columns);
+        }
+
+        #endregion
+
+        public void CreateTable(IConnectionManager connectionManager = null)
+        {
+            if (connectionManager is null)
+                CreateTableTask.Create(this);
+            else
+                CreateTableTask.Create(connectionManager, this);
+        }
+
+        private static void Validate(IConnectionManager connectionManager)
+        {
+            if (connectionManager is null)
+                throw new ArgumentNullException(nameof(connectionManager));
         }
     }
 }

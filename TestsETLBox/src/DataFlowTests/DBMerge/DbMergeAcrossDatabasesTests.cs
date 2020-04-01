@@ -72,8 +72,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             CreateSourceAndDestinationTables(sourceConnection, destConnection, QB, QE);
 
             //Act
-            var nameSource = new DbSource<Name>(sourceConnection, "Name");
-            var personMerge = new DbMerge<People>(destConnection, "People");
+            var nameSource = new DbSource<Name>("Name", sourceConnection);
+            var personMerge = new DbMerge<People>("People", destConnection);
 
             var transform = new RowTransformation<Name, People>(d =>
             {

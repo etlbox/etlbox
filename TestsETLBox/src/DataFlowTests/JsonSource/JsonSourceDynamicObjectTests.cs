@@ -37,7 +37,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     r.Col2 = r.Column2;
                     return r;
                 });
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(Connection, "JsonSource2ColsDynamic");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("JsonSource2ColsDynamic", Connection);
 
             //Act
             JsonSource<ExpandoObject> source = new JsonSource<ExpandoObject>("res/JsonSource/TwoColumnsDifferentNames.json", ResourceType.File);

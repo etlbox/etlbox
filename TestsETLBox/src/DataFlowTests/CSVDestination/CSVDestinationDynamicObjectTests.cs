@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("CSVDestDynamicObject");
             s2C.InsertTestDataSet3();
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "CSVDestDynamicObject");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("CSVDestDynamicObject", SqlConnection);
 
             //Act
             CsvDestination<ExpandoObject> dest = new CsvDestination<ExpandoObject>("./SimpleWithDynamicObject.csv");

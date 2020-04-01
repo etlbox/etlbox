@@ -42,7 +42,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(SqlConnection, "LookupErrorLinkingDest");
             CreateSourceTable(SqlConnection, "LookupErrorLinkingSource");
-            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(SqlConnection, "LookupErrorLinkingSource");
+            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>("LookupErrorLinkingSource", SqlConnection);
 
             MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>();
             source.Data = new List<MyInputDataRow>() {
@@ -64,7 +64,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     }
                     , LookupTableData
                 );
-                DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(SqlConnection, "LookupErrorLinkingDest");
+                DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>("LookupErrorLinkingDest", SqlConnection);
                 source.LinkTo(lookup);
                 lookup.LinkTo(dest);
                 source.Execute();
@@ -78,7 +78,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(SqlConnection, "LookupErrorLinkingDest");
             CreateSourceTable(SqlConnection, "LookupErrorLinkingSource");
-            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(SqlConnection, "LookupErrorLinkingSource");
+            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>("LookupErrorLinkingSource", SqlConnection);
 
             MemorySource<MyInputDataRow> source = new MemorySource<MyInputDataRow>();
             source.Data = new List<MyInputDataRow>() {
@@ -101,7 +101,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 }
                 , LookupTableData
             );
-            DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>(SqlConnection, "LookupErrorLinkingDest");
+            DbDestination<MyInputDataRow> dest = new DbDestination<MyInputDataRow>("LookupErrorLinkingDest", SqlConnection);
             source.LinkTo(lookup);
             lookup.LinkTo(dest);
             lookup.LinkLookupSourceErrorTo(errorDest);

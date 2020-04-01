@@ -42,7 +42,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source4Columns.InsertTestData();
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection, "Destination", identityColumnIndex: 2);
 
-            DbSource<string[]> source = new DbSource<string[]>(connection, "Source");
+            DbSource<string[]> source = new DbSource<string[]>("Source", connection);
             RowTransformation<string[], MyExtendedRow> trans = new RowTransformation<string[], MyExtendedRow>(
                 row => new MyExtendedRow()
                 {
@@ -53,7 +53,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 });
 
             //Act
-            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>(connection, "Destination");
+            DbDestination<MyExtendedRow> dest = new DbDestination<MyExtendedRow>("Destination", connection);
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();

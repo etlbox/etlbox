@@ -31,8 +31,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("BlockTransDestDynamic");
 
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "BlockTransSourceDynamic");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "BlockTransDestDynamic");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("BlockTransSourceDynamic", SqlConnection);
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("BlockTransDestDynamic", SqlConnection);
 
             //Act
             BlockTransformation<ExpandoObject> block = new BlockTransformation<ExpandoObject>(

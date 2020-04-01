@@ -45,7 +45,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DBMultipleDestination");
 
             //Act
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DBMultipleDestination");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("DBMultipleDestination", connection);
 
             source1.LinkTo(dest);
             source2.LinkTo(dest);

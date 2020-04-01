@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("CustomDestination");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "Source");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("Source", SqlConnection);
             CustomDestination<MySimpleRow> dest = new CustomDestination<MySimpleRow>(
                 row => {
                     SqlTask.ExecuteNonQuery(SqlConnection, "Insert row",
@@ -57,7 +57,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("JSonSource");
             source2Columns.InsertTestData();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(SqlConnection, "JSonSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("JSonSource", SqlConnection);
             List<MySimpleRow> rows = new List<MySimpleRow>();
 
             //Act

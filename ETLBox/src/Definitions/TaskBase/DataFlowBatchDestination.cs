@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.ConnectionManager;
+using System;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 
@@ -8,8 +9,9 @@ namespace ALE.ETLBox.DataFlow
         DataFlowDestination<TInput[]>,
         IDataFlowBatchDestination<TInput>
     {
-        protected DataFlowBatchDestination(int batchSize = DefaultBatchSize) =>
-            BatchSize = batchSize;
+        protected DataFlowBatchDestination(IConnectionManager connectionManager = null, int batchSize = DefaultBatchSize) :
+            base(connectionManager)
+            => BatchSize = batchSize;
 
         public Func<TInput[], TInput[]> BeforeBatchWrite { get; set; }
         public new ITargetBlock<TInput> TargetBlock => Buffer;

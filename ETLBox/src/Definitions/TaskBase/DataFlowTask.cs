@@ -1,4 +1,5 @@
-﻿using ALE.ETLBox.DataFlow;
+﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.DataFlow;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,6 +7,10 @@ namespace ALE.ETLBox
 {
     public abstract class DataFlowTask : GenericTask, ITask
     {
+        protected DataFlowTask(IConnectionManager connectionManager = null) :
+            base(connectionManager)
+        { }
+
         protected int? _loggingThresholdRows;
         public virtual int? LoggingThresholdRows
         {

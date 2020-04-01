@@ -31,9 +31,9 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest1Table = new TwoColumnsTableFixture("Destination1");
             TwoColumnsTableFixture dest2Table = new TwoColumnsTableFixture("Destination2");
 
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(Connection, "Source");
-            DbDestination<ExpandoObject> dest1 = new DbDestination<ExpandoObject>(Connection, "Destination1");
-            DbDestination< ExpandoObject> dest2 = new DbDestination<ExpandoObject>(Connection, "Destination2");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("Source", Connection);
+            DbDestination<ExpandoObject> dest1 = new DbDestination<ExpandoObject>("Destination1", Connection);
+            DbDestination< ExpandoObject> dest2 = new DbDestination<ExpandoObject>("Destination2", Connection);
 
             //Act
             Multicast<ExpandoObject> multicast = new Multicast<ExpandoObject>();

@@ -29,7 +29,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("MemoryDestination");
             MemorySource<ExpandoObject> source = new MemorySource<ExpandoObject>();
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(SqlConnection, "MemoryDestination");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("MemoryDestination", SqlConnection);
             AddObjectsToSource(source);
 
             //Act

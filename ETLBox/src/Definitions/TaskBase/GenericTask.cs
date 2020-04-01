@@ -1,4 +1,5 @@
 ﻿using ALE.ETLBox.ConnectionManager;
+using ALE.ETLBox.ControlFlow;
 using ALE.ETLBox.Helper;
 using System;
 using CF = ALE.ETLBox.ControlFlow;
@@ -7,6 +8,9 @@ namespace ALE.ETLBox
 {
     public abstract class GenericTask : ITask
     {
+        protected GenericTask(IConnectionManager connectionManager = null) =>
+            ConnectionManager = connectionManager;
+
         private string _taskType;
         public virtual string TaskType
         {
@@ -18,16 +22,7 @@ namespace ALE.ETLBox
 
         public virtual IConnectionManager ConnectionManager { get; set; }
 
-        internal virtual IConnectionManager DbConnectionManager
-        {
-            get
-            {
-                if (ConnectionManager == null)
-                    return (IConnectionManager)ControlFlow.ControlFlow.DefaultDbConnection;
-                else
-                    return (IConnectionManager)ConnectionManager;
-            }
-        }
+        internal virtual IConnectionManager DbConnectionManager => ConnectionManager.DefaultIfNull();
 
         public ConnectionManagerType ConnectionType => ConnectionManagerSpecifics.GetType(this.DbConnectionManager);
         public string QB => ConnectionManagerSpecifics.GetBeginQuotation(this.ConnectionType);
@@ -67,9 +62,6 @@ namespace ALE.ETLBox
             }
         }
         internal virtual bool HasName => !String.IsNullOrWhiteSpace(TaskName);
-
-        public GenericTask()
-        { }
 
         public void CopyTaskProperties(ITask otherTask)
         {

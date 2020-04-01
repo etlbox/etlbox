@@ -36,7 +36,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source2Columns.InsertTestData();
 
             //Act
-            DbSource<ColumnMapRow> source = new DbSource<ColumnMapRow>(connection, "Source");
+            DbSource<ColumnMapRow> source = new DbSource<ColumnMapRow>("Source", connection);
             CustomDestination<ColumnMapRow> dest = new CustomDestination<ColumnMapRow>(
                 input =>
                 {
@@ -70,7 +70,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             source4Columns.InsertTestData();
 
             //Act
-            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>(connection, "SourceColumnMapping");
+            DbSource<MyExtendedRow> source = new DbSource<MyExtendedRow>("SourceColumnMapping", connection);
             CustomDestination<MyExtendedRow> dest = new CustomDestination<MyExtendedRow>(
                 input =>
                 {

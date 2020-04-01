@@ -50,7 +50,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             d2c.InsertTestDataSet3();
 
             //Act
-            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>(connection, "DBMergeDeltaDestination")
+            DbMerge<MyMergeRow> dest = new DbMerge<MyMergeRow>("DBMergeDeltaDestination", connection)
             {
                 DeltaMode = DeltaMode.Delta
             };

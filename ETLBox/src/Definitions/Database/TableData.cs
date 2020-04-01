@@ -50,16 +50,7 @@ namespace ALE.ETLBox
 
         #region Rows
 
-        public List<object[]> Rows
-        {
-            get => rows;
-            set
-            {
-                if (value is null)
-                    throw new ArgumentNullException(nameof(Rows));
-                rows = value;
-            }
-        }
+        public List<object[]> Rows { get; }
         IReadOnlyList<IReadOnlyList<object>> ITableData.Rows => Rows;
 
         private List<object[]> rows;
@@ -189,7 +180,6 @@ namespace ALE.ETLBox
                 if (disposing)
                 {
                     Rows.Clear();
-                    Rows = null;
                 }
 
                 disposedValue = true;

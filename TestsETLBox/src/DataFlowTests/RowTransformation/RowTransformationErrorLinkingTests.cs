@@ -34,10 +34,10 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture("RowTransExceptionTest");
 
             CsvSource<string[]> source = new CsvSource<string[]>("res/RowTransformation/TwoColumns.csv");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(SqlConnection, "RowTransExceptionTest");
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("RowTransExceptionTest", SqlConnection);
 
             CreateErrorTableTask.DropAndCreate(SqlConnection, "errors");
-            DbDestination<ETLBoxError> errorDest = new DbDestination<ETLBoxError>(SqlConnection, "errors");
+            DbDestination<ETLBoxError> errorDest = new DbDestination<ETLBoxError>("errors", SqlConnection);
 
             //Act
             RowTransformation<string[], MySimpleRow> trans = new RowTransformation<string[], MySimpleRow>(

@@ -61,11 +61,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             CsvSource<string[]> source = new CsvSource<string[]>("res/UseCases/AccessData.csv");
-            DbDestination<string[]> dest = new DbDestination<string[]>(batchSize: 2)
-            {
-                DestinationTableDefinition = testTable,
-                ConnectionManager = AccessOdbcConnection
-            };
+            DbDestination<string[]> dest = new DbDestination<string[]>(testTable, AccessOdbcConnection, batchSize: 2);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -92,11 +88,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(SqlConnection, "dbo.AccessTargetTableWTD");
 
             //Act
-            DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection)
-            {
-                SourceTableDefinition = testTable
-            };
-            DbDestination<Data> dest = new DbDestination<Data>(SqlConnection, "dbo.AccessTargetTableWTD");
+            DbSource<Data> source = new DbSource<Data>(testTable, AccessOdbcConnection);
+            DbDestination<Data> dest = new DbDestination<Data>("dbo.AccessTargetTableWTD", SqlConnection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -124,8 +117,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture destTable = new TwoColumnsTableFixture(SqlConnection, "dbo.AccessTargetTable");
 
             //Act
-            DbSource<Data> source = new DbSource<Data>(AccessOdbcConnection, "TestTable");
-            DbDestination<Data> dest = new DbDestination<Data>(SqlConnection, "dbo.AccessTargetTable");
+            DbSource<Data> source = new DbSource<Data>("TestTable", AccessOdbcConnection);
+            DbDestination<Data> dest = new DbDestination<Data>("dbo.AccessTargetTable", SqlConnection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

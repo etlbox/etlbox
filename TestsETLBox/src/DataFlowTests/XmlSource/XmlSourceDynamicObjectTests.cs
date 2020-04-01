@@ -37,7 +37,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     r.Col2 = r.Column2;
                     return r;
                 });
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(Connection, "XmlSource2ColsDynamic");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("XmlSource2ColsDynamic", Connection);
 
             //Act
             XmlSource<ExpandoObject> source = new XmlSource<ExpandoObject>("res/XmlSource/TwoColumnsElementDifferentNames.xml", ResourceType.File)

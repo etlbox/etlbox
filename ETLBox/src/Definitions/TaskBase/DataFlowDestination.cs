@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ALE.ETLBox.ConnectionManager;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
@@ -7,6 +8,10 @@ namespace ALE.ETLBox.DataFlow
 {
     public abstract class DataFlowDestination<TInput> : DataFlowTask, ITask, IDataFlowDestination<TInput>
     {
+        protected DataFlowDestination(IConnectionManager connectionManager = null) :
+            base(connectionManager)
+        { }
+
         public Action OnCompletion { get; set; }
         public Task Completion { get; protected set; }
         public ITargetBlock<TInput> TargetBlock => TargetAction;

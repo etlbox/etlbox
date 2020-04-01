@@ -33,12 +33,11 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 , {s2c.QB}Col1{s2c.QE} VARCHAR(100) NULL)");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>()
-            {
-                Sql = $"SELECT {s2c.QB}Col1{s2c.QE}, {s2c.QB}Col2{s2c.QE} FROM {s2c.QB}SourceNotMatchingCols{s2c.QE}",
-                ConnectionManager = connection
-            };
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "destination_notmatchingcols");
+            DbSource<string[]> source = new DbSource<string[]>(
+                $"SELECT {s2c.QB}Col1{s2c.QE}, {s2c.QB}Col2{s2c.QE} FROM {s2c.QB}SourceNotMatchingCols{s2c.QE}",
+                connection
+                );
+            DbDestination<string[]> dest = new DbDestination<string[]>("destination_notmatchingcols", connection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -62,8 +61,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 (colx varchar (100) not null )");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(connection, "SourceTwoColumns");
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "destination_onecolumn");
+            DbSource<string[]> source = new DbSource<string[]>("SourceTwoColumns", connection);
+            DbDestination<string[]> dest = new DbDestination<string[]>("destination_onecolumn", connection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -85,8 +84,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL, col3 VARCHAR(100) NULL)");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(connection, "source_additionalnullcol");
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "destination_additionalnullcol");
+            DbSource<string[]> source = new DbSource<string[]>("source_additionalnullcol", connection);
+            DbDestination<string[]> dest = new DbDestination<string[]>("destination_additionalnullcol", connection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();
@@ -105,8 +104,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 (col1 VARCHAR(100) NULL, col2 VARCHAR(100) NULL, col3 VARCHAR(100) NOT NULL)");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(connection, "source_additionalnotnullcol");
-            DbDestination<string[]> dest = new DbDestination<string[]>(connection, "destination_additionalnotnullcol");
+            DbSource<string[]> source = new DbSource<string[]>("source_additionalnotnullcol", connection);
+            DbDestination<string[]> dest = new DbDestination<string[]>("destination_additionalnotnullcol", connection);
             source.LinkTo(dest);
             Assert.Throws<AggregateException>(() =>
             {

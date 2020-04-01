@@ -34,8 +34,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             FourColumnsTableFixture dest4Columns = new FourColumnsTableFixture(connection,"DestinationLookupDynamicObject", -1);
 
 
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(connection, "SourceLookupDynamicObject");
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(connection, "DestinationLookupDynamicObject");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("SourceLookupDynamicObject", connection);
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("DestinationLookupDynamicObject", connection);
 
             //Act
             List<ExpandoObject> lookupList = new List<ExpandoObject>();

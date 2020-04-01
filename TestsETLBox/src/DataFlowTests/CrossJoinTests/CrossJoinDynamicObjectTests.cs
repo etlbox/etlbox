@@ -30,8 +30,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             table1.InsertTestData();
             TwoColumnsTableFixture table2 = new TwoColumnsTableFixture(SqlConnection, "CrossJoinSource2");
             table2.InsertTestData();
-            DbSource<ExpandoObject> source1 = new DbSource<ExpandoObject>(SqlConnection, "CrossJoinSource1");
-            DbSource<ExpandoObject> source2 = new DbSource<ExpandoObject>(SqlConnection, "CrossJoinSource2");
+            DbSource<ExpandoObject> source1 = new DbSource<ExpandoObject>("CrossJoinSource1", SqlConnection);
+            DbSource<ExpandoObject> source2 = new DbSource<ExpandoObject>("CrossJoinSource2", SqlConnection);
             MemoryDestination dest = new MemoryDestination();
 
             CrossJoin crossJoin = new CrossJoin(

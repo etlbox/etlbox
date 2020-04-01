@@ -21,50 +21,29 @@ namespace ALE.ETLBox.DataFlow
     public class DbDestination<TInput> :
         DataFlowBatchDestination<TInput>, ITask, IDataFlowDestination<TInput>
     {
+        public DbDestination(TableDefinition tableDefinition, IConnectionManager connectionManager = null, int batchSize = DefaultBatchSize) :
+            base(connectionManager, batchSize)
+        {
+            TableDefinition = tableDefinition ?? throw new ArgumentNullException(nameof(tableDefinition));
+            typeInfo = new TypeInfo(typeof(TInput));
+        }
+
         /* ITask Interface */
-        public override string TaskName => $"Write data into table {DestinationTableDefinition?.Name ?? TableName}";
+        public override string TaskName => $"Write data into table {TableDefinition.Name}";
         /* Public properties */
-        public TableDefinition DestinationTableDefinition { get; set; }
-        public bool HasDestinationTableDefinition => DestinationTableDefinition != null;
-        public string TableName { get; set; }
-        public bool HasTableName => !String.IsNullOrWhiteSpace(TableName);
-        internal TypeInfo TypeInfo { get; set; }
+        public TableDefinition TableDefinition { get; }
 
-        public DbDestination(string tableName = null, int batchSize = DefaultBatchSize) :
-            base(batchSize)
-        {
-            TableName = tableName;
-        }
-
-        public DbDestination(IConnectionManager connectionManager, string tableName = null, int batchSize = DefaultBatchSize) :
-            this(tableName, batchSize)
-        {
-            ConnectionManager = connectionManager;
-        }
-
-        protected override void InitObjects(int batchSize)
-        {
-            base.InitObjects(batchSize);
-            TypeInfo = new TypeInfo(typeof(TInput));
-        }
+        private readonly TypeInfo typeInfo;
 
         protected override void WriteBatch(ref TInput[] data)
         {
-            if (!HasDestinationTableDefinition) LoadTableDefinitionFromTableName();
+            TableDefinition.EnsureColumns(DbConnectionManager);
 
             base.WriteBatch(ref data);
 
             TryBulkInsertData(data);
 
             LogProgressBatch(data.Length);
-        }
-
-        private void LoadTableDefinitionFromTableName()
-        {
-            if (HasTableName)
-                DestinationTableDefinition = TableDefinition.GetDefinitionFromTableName(this.DbConnectionManager, TableName);
-            else if (!HasDestinationTableDefinition && !HasTableName)
-                throw new ETLBoxException("No Table definition or table name found! You must provide a table name or a table definition.");
         }
 
         private void TryBulkInsertData(TInput[] data)
@@ -76,7 +55,7 @@ namespace ALE.ETLBox.DataFlow
                 {
                     DisableLogging = true
                 }
-                .BulkInsert(td, DestinationTableDefinition.Name);
+                .BulkInsert(td, TableDefinition.Name);
             }
             catch (Exception e)
             {
@@ -88,8 +67,8 @@ namespace ALE.ETLBox.DataFlow
         private TableData<TInput> CreateTableDataObject(ref TInput[] data)
         {
             var rows = ConvertRows(ref data);
-            var td = new TableData<TInput>(DestinationTableDefinition, rows);
-            if (TypeInfo.IsDynamic && data.Length > 0)
+            var td = new TableData<TInput>(TableDefinition, rows);
+            if (typeInfo.IsDynamic && data.Length > 0)
                 td.DynamicColumnNames.AddRange(((IDictionary<string, object>)data[0]).Keys);
             return td;
         }
@@ -101,11 +80,11 @@ namespace ALE.ETLBox.DataFlow
             {
                 if (CurrentRow == null) continue;
                 object[] rowResult;
-                if (TypeInfo.IsArray)
+                if (typeInfo.IsArray)
                 {
                     rowResult = CurrentRow as object[];
                 }
-                else if (TypeInfo.IsDynamic)
+                else if (typeInfo.IsDynamic)
                 {
                     IDictionary<string, object> propertyValues = (IDictionary<string, object>)CurrentRow;
                     rowResult = new object[propertyValues.Count];
@@ -118,9 +97,9 @@ namespace ALE.ETLBox.DataFlow
                 }
                 else
                 {
-                    rowResult = new object[TypeInfo.PropertyLength];
+                    rowResult = new object[typeInfo.PropertyLength];
                     int index = 0;
-                    foreach (PropertyInfo propInfo in TypeInfo.Properties)
+                    foreach (PropertyInfo propInfo in typeInfo.Properties)
                     {
                         rowResult[index] = propInfo.GetValue(CurrentRow);
                         index++;
@@ -148,12 +127,8 @@ namespace ALE.ETLBox.DataFlow
     public class DbDestination :
         DbDestination<ExpandoObject>
     {
-        public DbDestination(IConnectionManager connectionManager, string tableName = null, int batchSize = DefaultBatchSize) :
-            base(connectionManager, tableName, batchSize)
-        { }
-
-        public DbDestination(string tableName = null, int batchSize = DefaultBatchSize) :
-            base(tableName, batchSize)
+        public DbDestination(TableDefinition tableDefinition, IConnectionManager connectionManager = null, int batchSize = DefaultBatchSize) :
+            base(tableDefinition, connectionManager, batchSize)
         { }
     }
 }

@@ -51,8 +51,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             FourColumnsTableFixture lookup4Columns = new FourColumnsTableFixture(connection, "LookupSameType");
             lookup4Columns.InsertTestData();
 
-            DbSource<MyDataRow> source = new DbSource<MyDataRow>(connection, "SourceLookupSameType");
-            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>(connection, "LookupSameType");
+            DbSource<MyDataRow> source = new DbSource<MyDataRow>("SourceLookupSameType", connection);
+            DbSource<MyLookupRow> lookupSource = new DbSource<MyLookupRow>("LookupSameType", connection);
 
             var lookup = new ETLBox.DataFlow.LookupTransformation<MyDataRow, MyLookupRow>();
             lookup.TransformationFunc =
@@ -66,7 +66,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     return row;
                 };
             lookup.Source = lookupSource;
-            DbDestination<MyDataRow> dest = new DbDestination<MyDataRow>(connection, "DestinationLookupSameType");
+            DbDestination<MyDataRow> dest = new DbDestination<MyDataRow>("DestinationLookupSameType", connection);
             source.LinkTo(lookup);
             lookup.LinkTo(dest);
             source.Execute();

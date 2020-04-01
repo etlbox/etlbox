@@ -38,7 +38,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     c.Col2 = c.Header2;
                     return c;
                 });
-            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>(Connection, "DestinationRowTransformationDynamic");
+            DbDestination<ExpandoObject> dest = new DbDestination<ExpandoObject>("DestinationRowTransformationDynamic", Connection);
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();

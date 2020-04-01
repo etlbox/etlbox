@@ -31,7 +31,7 @@ CREATE TABLE identity (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(PostgresConnection, "identity");
+            var result = TableDefinition.FromName(PostgresConnection, "identity");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -57,7 +57,7 @@ CREATE TABLE datetimetypes (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(PostgresConnection, "datetimetypes");
+            var result = TableDefinition.FromName(PostgresConnection, "datetimetypes");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -87,7 +87,7 @@ CREATE TABLE varchartable (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(PostgresConnection, "varchartable");
+            var result = TableDefinition.FromName(PostgresConnection, "varchartable");
 
             //Assert
             Assert.Collection(result.Columns,
@@ -121,7 +121,7 @@ CREATE TABLE numerictable (
             );
 
             //Act
-            var result = TableDefinition.GetDefinitionFromTableName(PostgresConnection, "numerictable");
+            var result = TableDefinition.FromName(PostgresConnection, "numerictable");
 
             //Assert
             Assert.Collection(result.Columns,

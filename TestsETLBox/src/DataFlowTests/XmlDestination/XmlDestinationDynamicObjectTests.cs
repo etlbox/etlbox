@@ -31,7 +31,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture s2C = new TwoColumnsTableFixture("XmlDestDynamic");
             s2C.InsertTestDataSet3();
-            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>(SqlConnection, "XmlDestDynamic");
+            DbSource<ExpandoObject> source = new DbSource<ExpandoObject>("XmlDestDynamic", SqlConnection);
 
             //Act
             XmlDestination<ExpandoObject> dest = new XmlDestination<ExpandoObject>("./SimpleWithDynamicObject.xml", ResourceType.File);

@@ -70,7 +70,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 }) ;
 
             //Act
-            DbDestination<MyDataTypeRow> dest = new DbDestination<MyDataTypeRow>(connection, "datatypedestination");
+            DbDestination<MyDataTypeRow> dest = new DbDestination<MyDataTypeRow>("datatypedestination", connection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

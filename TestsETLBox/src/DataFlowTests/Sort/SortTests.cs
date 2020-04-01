@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             //Arrange
             TwoColumnsTableFixture source2Columns = new TwoColumnsTableFixture("SortSource");
             source2Columns.InsertTestData();
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(Connection, "SortSource");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("SortSource", Connection);
 
             //Act
             List<MySimpleRow> actual = new List<MySimpleRow>();

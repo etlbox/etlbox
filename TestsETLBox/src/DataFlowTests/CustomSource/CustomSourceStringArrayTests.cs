@@ -41,7 +41,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             //Act
             CustomSource<string[]> source = new CustomSource<string[]>(ReadData, EndOfData);
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "Destination4CustomSourceNonGeneric");
+            DbDestination<string[]> dest = new DbDestination<string[]>("Destination4CustomSourceNonGeneric", Connection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

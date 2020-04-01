@@ -40,8 +40,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DbDestinationErrorLinking");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DbSourceErrorLinking");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DbDestinationErrorLinking");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("DbSourceErrorLinking", connection);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("DbDestinationErrorLinking", connection);
             MemoryDestination<ETLBoxError> errorDest = new MemoryDestination<ETLBoxError>();
             source.LinkTo(dest);
             source.LinkErrorTo(errorDest);
@@ -67,8 +67,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
             TwoColumnsTableFixture dest2Columns = new TwoColumnsTableFixture(connection, "DbDestinationNoErrorLinking");
 
             //Act
-            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>(connection, "DbSourceNoErrorLinking");
-            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>(connection, "DbDestinationNoErrorLinking");
+            DbSource<MySimpleRow> source = new DbSource<MySimpleRow>("DbSourceNoErrorLinking", connection);
+            DbDestination<MySimpleRow> dest = new DbDestination<MySimpleRow>("DbDestinationNoErrorLinking", connection);
             source.LinkTo(dest);
 
             //Assert

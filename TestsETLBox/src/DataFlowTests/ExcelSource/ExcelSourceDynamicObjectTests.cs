@@ -38,7 +38,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 r.Col2 = r.Column2;
                 return r;
             });
-            DbDestination dest = new DbDestination(Connection, "ExcelDestinationDynamic");
+            DbDestination dest = new DbDestination("ExcelDestinationDynamic", Connection);
 
             source.LinkTo(trans);
             trans.LinkTo(dest);

@@ -28,8 +28,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
         private void DataFlowForIdentityColumn(IConnectionManager connection)
         {
-            DbSource<MyPartialRow> source = new DbSource<MyPartialRow>(connection, "Source4Cols");
-            DbDestination<MyPartialRow> dest = new DbDestination<MyPartialRow>(connection, "Destination4Cols");
+            DbSource<MyPartialRow> source = new DbSource<MyPartialRow>("Source4Cols", connection);
+            DbDestination<MyPartialRow> dest = new DbDestination<MyPartialRow>("Destination4Cols", connection);
             source.LinkTo(dest);
             source.Execute();
             dest.Wait();

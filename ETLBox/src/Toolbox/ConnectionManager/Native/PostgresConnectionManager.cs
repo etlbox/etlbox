@@ -60,7 +60,7 @@ FROM STDIN (FORMAT BINARY)"))
 
         public override void BeforeBulkInsert(string tableName)
         {
-            DestTableDef = TableDefinition.GetDefinitionFromTableName(this, tableName);
+            DestTableDef = TableDefinition.FromName(this, tableName);
             DestinationColumns = new Dictionary<string, TableColumn>();
             foreach (var colDef in DestTableDef.Columns)
             {

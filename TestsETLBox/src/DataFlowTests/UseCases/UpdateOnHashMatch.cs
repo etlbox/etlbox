@@ -67,7 +67,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
             CreateDestinationTable("dbo.HashMatchDestination");
 
             //Act
-            DbSource<string[]> source = new DbSource<string[]>(ConnectionSource, "dbo.HashMatchSource");
+            DbSource<string[]> source = new DbSource<string[]>("dbo.HashMatchSource", ConnectionSource);
 
             RowTransformation<string[]> trans = new RowTransformation<string[]>(
                 row =>
@@ -79,7 +79,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
 
             List<string[]> allEntriesInDestination = new List<string[]>();
             LookupTransformation<string[],string[]> lookup = new LookupTransformation<string[],string[]> (
-                new DbSource<string[]>(ConnectionDestination, "dbo.HashMatchDestination"),
+                new DbSource<string[]>("dbo.HashMatchDestination", ConnectionDestination),
                 row =>
                 {
                     var matchingIdEntry = allEntriesInDestination.Where(destRow => destRow[0] == row[0]).FirstOrDefault();

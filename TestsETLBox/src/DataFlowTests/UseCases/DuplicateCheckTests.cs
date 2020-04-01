@@ -43,7 +43,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
         private DbDestination<Poco> CreateDestinationTable(string tableName)
         {
             DropTableTask.DropIfExists(Connection, tableName);
-            var dest = new DbDestination<Poco>(Connection, tableName);
+            var dest = new DbDestination<Poco>(tableName, Connection);
             TableDefinition stagingTable = new TableDefinition(tableName, new List<TableColumn>() {
                 new TableColumn("PKey", "INT", allowNulls: false, isPrimaryKey:true, isIdentity:true),
                 new TableColumn("ID", "INT", allowNulls: false),

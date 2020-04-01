@@ -41,7 +41,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                     return new string[] { csvdata[1], csvdata[0] };
                 });
 
-            DbDestination<string[]> dest = new DbDestination<string[]>(Connection, "DestinationRowTransformation");
+            DbDestination<string[]> dest = new DbDestination<string[]>("DestinationRowTransformation", Connection);
             source.LinkTo(trans);
             trans.LinkTo(dest);
             source.Execute();

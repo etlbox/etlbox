@@ -34,7 +34,7 @@ namespace ALE.ETLBoxTests.DataFlowTests
                 @"CREATE TABLE dbo.WebServiceDestination 
                 ( Id INT NOT NULL, UserId INT NOT NULL, Title NVARCHAR(100) NOT NULL, Completed BIT NOT NULL )"
             );
-            DbDestination<Todo> dest = new DbDestination<Todo>(Connection, "dbo.WebServiceDestination");
+            DbDestination<Todo> dest = new DbDestination<Todo>("dbo.WebServiceDestination", Connection);
             WebserviceReader wsreader = new WebserviceReader();
 
             //Act
