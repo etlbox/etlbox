@@ -12,11 +12,11 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     [Collection("ControlFlow")]
     public class CreateDatabaseTaskTests
     {
-        public SqlConnectionManager SqlMasterConnection => new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").GetMasterConnection());
+        public SqlConnectionManager SqlMasterConnection => new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName());
         public static IEnumerable<object[]> SqlConnectionsWithMaster() => new[] {
-                    new object[] { (IConnectionManager)new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
-                    new object[] { (IConnectionManager)new PostgresConnectionManager(Config.PostgresConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
-                    new object[] { (IConnectionManager)new MySqlConnectionManager(Config.MySqlConnection.ConnectionString("ControlFlow").GetMasterConnection()) },
+                    new object[] { (IConnectionManager)new SqlConnectionManager(Config.SqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()) },
+                    new object[] { (IConnectionManager)new PostgresConnectionManager(Config.PostgresConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()) },
+                    new object[] { (IConnectionManager)new MySqlConnectionManager(Config.MySqlConnection.ConnectionString("ControlFlow").CloneWithMasterDbName()) },
         };
         public CreateDatabaseTaskTests()
         { }

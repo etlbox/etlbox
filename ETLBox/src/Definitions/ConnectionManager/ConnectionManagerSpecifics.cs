@@ -4,6 +4,8 @@
     {
         public static ConnectionManagerType GetType(IConnectionManager connection)
         {
+            if (connection is null)
+                throw new System.ArgumentNullException(nameof(connection));
             if (connection.GetType() == typeof(SqlConnectionManager) ||
                         connection.GetType() == typeof(SqlOdbcConnectionManager)
                         )

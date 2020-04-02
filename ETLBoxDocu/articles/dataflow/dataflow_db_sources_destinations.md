@@ -156,7 +156,7 @@ When you create a new connection manager, you have the choice to either pass the
 
 ```C#
 SqlConnectionString etlboxConnString = new SqlConnectionString("Data Source=.;Integrated Security=SSPI;Initial Catalog=ETLBox;");
-SqlConnectionString masterConnString = etlboxConnString.GetMasterConnection();
+SqlConnectionString masterConnString = etlboxConnString.CloneWithMasterDbName();
 
 //masterConnString is equal to "Data Source=.;Integrated Security=SSPI;"
 SqlConnectionManager conectionToMaster = new SqlConnectionManager(masterConnString); 

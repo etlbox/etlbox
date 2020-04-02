@@ -13,7 +13,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
     [Collection("SSAS ControlFlow")]
     public class XMLATaskTests
     {
-        public AdomdConnectionManager DefaultCatalog => new AdomdConnectionManager(Config.SSASConnection.ConnectionString("ControlFlow").GetConnectionWithoutCatalog());
+        public AdomdConnectionManager DefaultCatalog => new AdomdConnectionManager(Config.SSASConnection.ConnectionString("ControlFlow").CloneWithDbName());
         public XMLATaskTests()
         { }
 

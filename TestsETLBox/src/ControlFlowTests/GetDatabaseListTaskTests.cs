@@ -15,7 +15,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests
     public class GetDatabaseListTaskTests
     {
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
-        public string DBName => Config.SqlConnection.ConnectionString("ControlFlow").DBName;
+        public string DBName => Config.SqlConnection.ConnectionString("ControlFlow").DbName;
 
         public GetDatabaseListTaskTests(ControlFlowDatabaseFixture dbFixture)
         { }

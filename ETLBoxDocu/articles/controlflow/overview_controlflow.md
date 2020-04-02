@@ -247,7 +247,7 @@ This is where you could use the ConnectionString-Wrapper for you database. E.g.,
 
 ```C#
 PostgresConnectionString conStringWrapper = new PostgresConnectionString("Server=10.37.128.2;Database=ETLBox_DataFlow;User Id=postgres;Password=etlboxpassword;");
-PostgresConnectionString connectionWithoutCatalog = conStringWrapper.GetMasterConnection();
+PostgresConnectionString connectionWithoutCatalog = conStringWrapper.CloneWithMasterDbName();
 PostgresConnectionManager connectionManager = new PostgresConnectionManager(connectionWithoutCatalog);
 ```
 

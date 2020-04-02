@@ -28,7 +28,7 @@ namespace ALE.ETLBox.DataFlow
             get => batchSize;
             set
             {
-                InitObjects(batchSize);
+                InitObjects(value);
                 batchSize = value;
             }
         }

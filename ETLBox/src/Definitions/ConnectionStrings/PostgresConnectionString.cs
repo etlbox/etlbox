@@ -1,5 +1,4 @@
-﻿using MySql.Data.MySqlClient;
-using Npgsql;
+﻿using Npgsql;
 
 namespace ALE.ETLBox
 {
@@ -7,59 +6,23 @@ namespace ALE.ETLBox
     /// A helper class for encapsulating a conection string to a MySql server in an object.
     /// Internally the MySqlConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
-    public class PostgresConnectionString : IDbConnectionString
+    public class PostgresConnectionString :
+        DbConnectionStringWithDbName<PostgresConnectionString, NpgsqlConnectionStringBuilder>
     {
+        public PostgresConnectionString() :
+            base()
+        { }
+        public PostgresConnectionString(string value) :
+            base(value)
+        { }
 
-        NpgsqlConnectionStringBuilder _builder;
-
-        public string Value
+        public override string DbName
         {
-            get
-            {
-                return _builder?.ConnectionString;
-            }
-            set
-            {
-                _builder = new NpgsqlConnectionStringBuilder(value);
-            }
+            get => Builder.Database;
+            set => Builder.Database = value;
         }
+        public override string MasterDbName => "postgres";
 
-        public string DBName => _builder?.Database;
-
-        public NpgsqlConnectionStringBuilder MySqlConnectionStringBuilder => _builder;
-
-        public PostgresConnectionString()
-        {
-            _builder = new NpgsqlConnectionStringBuilder();
-        }
-
-        public PostgresConnectionString(string connectionString)
-        {
-            this.Value = connectionString;
-        }
-
-        public PostgresConnectionString GetMasterConnection()
-        {
-            NpgsqlConnectionStringBuilder con = new NpgsqlConnectionStringBuilder(Value);
-            con.Database = "postgres";
-            return new PostgresConnectionString(con.ConnectionString);
-        }
-
-        public PostgresConnectionString GetConnectionWithoutCatalog()
-        {
-            MySqlConnectionStringBuilder con = new MySqlConnectionStringBuilder(Value);
-            con.Database = "";
-            return new PostgresConnectionString(con.ConnectionString);
-        }
-
-        public static implicit operator PostgresConnectionString(string v)
-        {
-            return new PostgresConnectionString(v);
-        }
-
-        public override string ToString()
-        {
-            return Value;
-        }
+        public static implicit operator PostgresConnectionString(string value) => new PostgresConnectionString(value);
     }
 }

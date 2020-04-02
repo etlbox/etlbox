@@ -15,8 +15,8 @@ namespace ALE.ETLBox.DataFlow
 
         public DataFlowLinker(DataFlowTask callingTask, ISourceBlock<TOutput> sourceBlock)
         {
-            this.CallingTask = callingTask;
-            this.SourceBlock = sourceBlock;
+            this.CallingTask = callingTask ?? throw new ArgumentNullException(nameof(callingTask));
+            this.SourceBlock = sourceBlock ?? throw new ArgumentNullException(nameof(sourceBlock));
         }
 
         public IDataFlowLinkSource<TOutput> LinkTo(IDataFlowLinkTarget<TOutput> target)

@@ -31,8 +31,8 @@ namespace ALE.ETLBoxTests.DataFlowTests
         void AssertOpenConnectionCount(int allowedOpenConnections, string connectionString)
         {
             SqlConnectionString conString = new SqlConnectionString(connectionString);
-            SqlConnectionManager master = new SqlConnectionManager(conString.GetMasterConnection());
-            string dbName = conString.SqlConnectionStringBuilder.InitialCatalog;
+            SqlConnectionManager master = new SqlConnectionManager(conString.CloneWithMasterDbName());
+            string dbName = conString.Builder.InitialCatalog;
             int? openConnections =
                 new SqlTask("Count open connections",
                 $@"SELECT COUNT(dbid) as NumberOfConnections FROM sys.sysprocesses

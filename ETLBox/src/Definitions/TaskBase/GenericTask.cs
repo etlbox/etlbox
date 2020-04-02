@@ -65,6 +65,8 @@ namespace ALE.ETLBox
 
         public void CopyTaskProperties(ITask otherTask)
         {
+            if (otherTask is null)
+                throw new ArgumentNullException(nameof(otherTask));
             this.TaskName = otherTask.TaskName;
             this.TaskHash = otherTask.TaskHash;
             this.TaskType = otherTask.TaskType;

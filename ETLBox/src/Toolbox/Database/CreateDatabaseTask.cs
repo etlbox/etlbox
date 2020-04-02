@@ -13,18 +13,34 @@ namespace ALE.ETLBox.ControlFlow
     /// </example>
     public class CreateDatabaseTask : GenericTask, ITask
     {
+        public CreateDatabaseTask(string databaseName = null, string collation = null, IConnectionManager connectionManager = null) :
+            base(connectionManager)
+        {
+            Collation = collation;
+            DatabaseName = databaseName;
+        }
+
         /* ITask Interface */
         public override string TaskName => $"Create DB {DatabaseName}";
         public void Execute()
         {
             if (ConnectionType == ConnectionManagerType.SQLite)
                 throw new ETLBoxNotSupportedException("This task is not supported with SQLite!");
-            bool doesExist = new IfDatabaseExistsTask(DatabaseName) { DisableLogging = true, ConnectionManager = ConnectionManager }.DoesExist;
-            if (!doesExist)
-                new SqlTask(this, Sql).ExecuteNonQuery();
+            var connectionManager = ConnectionManager.CloneWithMasterDbConnectionString();
+            var ifDatabaseExists = new IfDatabaseExistsTask(DatabaseName)
+            {
+                DisableLogging = true,
+                ConnectionManager = connectionManager
+            };
+            bool doesExist = ifDatabaseExists.Exists();
+            if (doesExist)
+                return;
+            new SqlTask(this, Sql)
+            {
+                ConnectionManager = connectionManager
+            }.
+            ExecuteNonQuery();
         }
-
-        public void Create() => Execute();
 
         /* Public properties */
         public string DatabaseName { get; set; }
@@ -60,21 +76,6 @@ END
                     return $@"CREATE DATABASE {QB}{DatabaseName}{QE} {CollationString}";
                 }
             }
-        }
-
-        /* Some constructors */
-        public CreateDatabaseTask()
-        {
-        }
-
-        public CreateDatabaseTask(string databaseName) : this()
-        {
-            DatabaseName = databaseName;
-        }
-
-        public CreateDatabaseTask(string databaseName, string collation) : this(databaseName)
-        {
-            Collation = collation;
         }
 
         /* Static methods for convenience */

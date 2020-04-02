@@ -18,7 +18,7 @@ namespace ALE.ETLBoxTests.ControlFlowTests.SqlServer
         { }
 
         public SqlConnectionManager Connection => Config.SqlConnection.ConnectionManager("ControlFlow");
-        public string DBName => Config.SqlConnection.ConnectionString("ControlFlow").DBName;
+        public string DBName => Config.SqlConnection.ConnectionString("ControlFlow").DbName;
 
         [Fact]
         public void AddFileGroup()

@@ -1,4 +1,6 @@
-﻿namespace ALE.ETLBox
+﻿using System;
+
+namespace ALE.ETLBox
 {
     /// <summary>
     /// The generic defintion of a connection string
@@ -6,6 +8,8 @@
     public interface IDbConnectionString
     {
         string Value { get; set; }
+
+        IDbConnectionString Clone();
         string ToString();
     }
 }

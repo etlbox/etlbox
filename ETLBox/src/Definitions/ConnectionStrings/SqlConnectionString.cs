@@ -8,61 +8,29 @@ namespace ALE.ETLBox
     /// A helper class for encapsulating a conection string to a sql server in an object.
     /// Internally the SqlConnectionStringBuilder is used to access the values of the given connection string.
     /// </summary>
-    public class SqlConnectionString : IDbConnectionString
+    public class SqlConnectionString :
+        DbConnectionStringWithDbName<SqlConnectionString, SqlConnectionStringBuilder>
     {
+        public SqlConnectionString() :
+            base()
+        { }
+        public SqlConnectionString(string value) :
+            base(value)
+        { }
 
-        SqlConnectionStringBuilder _builder;
-
-        public string Value
+        public override string Value
         {
-            get
-            {
-                return _builder?.ConnectionString.ReplaceIgnoreCase("Integrated Security=true", "Integrated Security=SSPI");
-
-            }
-            set
-            {
-
-                _builder = new SqlConnectionStringBuilder(value);
-            }
+            get => base.Value.ReplaceIgnoreCase("Integrated Security=true", "Integrated Security=SSPI");
+            set => base.Value = value;
         }
 
-        public string DBName => _builder?.InitialCatalog;
-
-        public SqlConnectionStringBuilder SqlConnectionStringBuilder => _builder;
-
-        public SqlConnectionString()
+        public override string DbName
         {
-            _builder = new SqlConnectionStringBuilder();
+            get => Builder.InitialCatalog;
+            set => Builder.InitialCatalog = value;
         }
+        public override string MasterDbName => "master";
 
-        public SqlConnectionString(string connectionString)
-        {
-            this.Value = connectionString;
-        }
-
-        public SqlConnectionString GetMasterConnection()
-        {
-            SqlConnectionStringBuilder con = new SqlConnectionStringBuilder(Value);
-            con.InitialCatalog = "master";
-            return new SqlConnectionString(con.ConnectionString);
-        }
-
-        public SqlConnectionString GetConnectionWithoutCatalog()
-        {
-            SqlConnectionStringBuilder con = new SqlConnectionStringBuilder(Value);
-            con.InitialCatalog = "";
-            return new SqlConnectionString(con.ConnectionString);
-        }
-
-        public static implicit operator SqlConnectionString(string v)
-        {
-            return new SqlConnectionString(v);
-        }
-
-        public override string ToString()
-        {
-            return Value;
-        }
+        public static implicit operator SqlConnectionString(string value) => new SqlConnectionString(value);
     }
 }
