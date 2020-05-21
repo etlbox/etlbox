@@ -35,10 +35,6 @@ namespace ALE.ETLBox.ConnectionManager
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.Access;
         public override string QB { get; } = @"[";
         public override string QE { get; } = @"]";
-        public override bool SupportDatabases { get; } = false;
-        public override bool SupportProcedures { get; } = false;
-        public override bool SupportSchemas { get; } = false;
-        public override bool SupportComputedColumns { get; } = false;
 
         public AccessOdbcConnectionManager() : base() {
             LeaveOpen = true;

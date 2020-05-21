@@ -26,11 +26,10 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                if (ConnectionType == ConnectionManagerType.SQLite
-                    || ConnectionType == ConnectionManagerType.Access)
-                    return $@"DELETE FROM {TN.QuotatedFullName}";
-                else
+                if (DbConnectionManager.SupportTableTruncate)
                     return $@"TRUNCATE TABLE {TN.QuotatedFullName}";
+                else
+                    return $@"DELETE FROM {TN.QuotatedFullName}";
             }
         }
 

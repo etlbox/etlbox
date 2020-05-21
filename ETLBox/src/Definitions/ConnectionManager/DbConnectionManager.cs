@@ -27,10 +27,16 @@ namespace ALE.ETLBox.ConnectionManager
         
         public abstract string QB { get; }
         public abstract string QE { get; }
-        public virtual bool SupportDatabases { get; } = true;
-        public virtual bool SupportProcedures { get; } = true;
-        public virtual bool SupportSchemas { get; } = true;
-        public virtual bool SupportComputedColumns { get; } = true;
+        
+        public virtual bool SupportDatabases { get; } = false;
+        public virtual bool SupportDatabaseSingleUserMode { get; } = false;
+        public virtual bool SupportProcedures { get; } = false;
+        public virtual bool SupportProcedureCreateOrReplace { get; } = false;
+        public virtual bool SupportProcedureAlter { get; } = false;
+        public virtual bool SupportSchemas { get; } = false;
+        public virtual bool SupportTableTruncate { get; } = false;
+        public virtual bool SupportSchemaCleanUp { get; } = false;
+        public virtual bool SupportComputedColumns { get; } = false;
 
         public DbConnectionManager()
         {

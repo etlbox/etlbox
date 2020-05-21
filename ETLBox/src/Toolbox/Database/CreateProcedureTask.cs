@@ -23,8 +23,10 @@ namespace ALE.ETLBox.ControlFlow
                 throw new ETLBoxNotSupportedException("This task is not supported!");
 
             IsExisting = new IfProcedureExistsTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
-            if (IsExisting && ConnectionType == ConnectionManagerType.MySql)
+            
+            if (IsExisting && !DbConnectionManager.SupportProcedureCreateOrReplace && !DbConnectionManager.SupportProcedureAlter)
                 new DropProcedureTask(ProcedureName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Drop();
+            
             new SqlTask(this, Sql).ExecuteNonQuery();
         }
 
@@ -81,12 +83,13 @@ namespace ALE.ETLBox.ControlFlow
         {
             get
             {
-                if (ConnectionType == ConnectionManagerType.Postgres)
+                if (DbConnectionManager.SupportProcedureCreateOrReplace)
                     return "CREATE OR REPLACE";
-                else if (ConnectionType == ConnectionManagerType.MySql)
-                    return "CREATE";
-                else
+
+                if (DbConnectionManager.SupportProcedureAlter)
                     return IsExisting ? "ALTER" : "CREATE";
+                
+                return "CREATE";
             }
         }
         string ParameterDefinition
@@ -94,15 +97,17 @@ namespace ALE.ETLBox.ControlFlow
             get
             {
                 string result = "";
-                if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.MySql
-
-                    )
+                
+                if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.MySql)
                     result += "(";
-                result += ProcedureParameters?.Count > 0 ?
-                String.Join(",", ProcedureParameters.Select(par => ParameterSql(par)))
-                : String.Empty;
+                
+                result += ProcedureParameters?.Count > 0 
+                    ? String.Join(",", ProcedureParameters.Select(par => ParameterSql(par)))
+                    : String.Empty;
+                
                 if (ConnectionType == ConnectionManagerType.Postgres || ConnectionType == ConnectionManagerType.MySql)
                     result += ")";
+                
                 return result;
             }
         }
@@ -110,22 +115,30 @@ namespace ALE.ETLBox.ControlFlow
         public string ParameterSql(ProcedureParameter par)
         {
             string sql = Environment.NewLine + "";
+            
             if (ConnectionType == ConnectionManagerType.SqlServer)
                 sql += "@";
+            
             if (ConnectionType == ConnectionManagerType.MySql)
                 sql += par.Out ? "OUT " : "IN ";
+            
             sql += $@"{par.Name} {par.DataType}";
+            
             if (par.HasDefaultValue && ConnectionType != ConnectionManagerType.MySql)
                 sql += $" = {par.DefaultValue}";
+            
             if (par.Out && ConnectionType != ConnectionManagerType.MySql)
                 sql += " OUT";
+            
             if (par.ReadOnly)
                 sql += " READONLY";
+            
             return sql;
         }
 
-        string Language => this.ConnectionType == ConnectionManagerType.Postgres ?
-            Environment.NewLine + "LANGUAGE SQL" : "";
+        string Language => this.ConnectionType == ConnectionManagerType.Postgres 
+            ? Environment.NewLine + "LANGUAGE SQL"
+            : "";
         string BEGIN => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "BEGIN";
         string END => this.ConnectionType == ConnectionManagerType.Postgres ? "$$" : "END";
         string AS => this.ConnectionType == ConnectionManagerType.MySql ? "" : "AS";

@@ -20,10 +20,6 @@ namespace ALE.ETLBox.ConnectionManager
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SQLite;
         public override string QB { get; } = @"""";
         public override string QE { get; } = @"""";
-        public override bool SupportDatabases { get; } = false;
-        public override bool SupportProcedures { get; } = false;
-        public override bool SupportSchemas { get; } = false;
-        public override bool SupportComputedColumns { get; } = false;
 
         public bool ModifyDBSettings { get; set; } = false;
 

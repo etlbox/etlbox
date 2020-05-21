@@ -16,7 +16,10 @@ namespace ALE.ETLBox.ConnectionManager
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.MySql;
         public override string QB { get; } = @"`";
         public override string QE { get; } = @"`";
-        public override bool SupportSchemas { get; } = false;
+        public override bool SupportDatabases { get; } = true;
+        public override bool SupportProcedures { get; } = true;
+        public override bool SupportTableTruncate { get; } = true;
+        public override bool SupportComputedColumns { get; } = true;
         
         public MySqlConnectionManager() : base() { }
 

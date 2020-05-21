@@ -16,6 +16,14 @@ namespace ALE.ETLBox.ConnectionManager
         public override ConnectionManagerType ConnectionManagerType { get; } = ConnectionManagerType.SqlServer;
         public override string QB { get; } = @"[";
         public override string QE { get; } = @"]";
+        public override bool SupportDatabases { get; } = true;
+        public override bool SupportDatabaseSingleUserMode { get; } = true;
+        public override bool SupportProcedures { get; } = true;
+        public override bool SupportProcedureAlter { get; } = true;
+        public override bool SupportSchemas { get; } = true;
+        public override bool SupportSchemaCleanUp { get; } = true;
+        public override bool SupportTableTruncate { get; } = true;
+        public override bool SupportComputedColumns { get; } = true;
         
         public bool ModifyDBSettings { get; set; } = false;
 

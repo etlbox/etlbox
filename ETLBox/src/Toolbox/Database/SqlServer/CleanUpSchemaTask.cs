@@ -14,12 +14,15 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
     {
         /* ITask Interface */
         public override string TaskName => $"Clean up schema {SchemaName}";
+        
         public void Execute()
         {
-            if (ConnectionType != ConnectionManagerType.SqlServer)
-                throw new ETLBoxNotSupportedException("This task is only supported with SqlServer!");
-            new SqlTask(this, Sql).ExecuteNonQuery();
+	        if (!DbConnectionManager.SupportSchemaCleanUp)
+		        throw new ETLBoxNotSupportedException("This task is not supported!");
+
+	        new SqlTask(this, Sql).ExecuteNonQuery();
         }
+        
         /* Public properties */
         public string SchemaName { get; set; }
         public string Sql
@@ -121,8 +124,5 @@ namespace ALE.ETLBox.ControlFlow.SqlServer
 
         /* Implementation & stuff */
 
-
     }
-
-
 }
