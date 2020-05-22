@@ -20,6 +20,7 @@ namespace ALE.ETLBox.ConnectionManager
         public override bool SupportProcedures { get; } = true;
         public override bool SupportTableTruncate { get; } = true;
         public override bool SupportComputedColumns { get; } = true;
+        public override bool SupportDescription { get; } = true;
         
         public MySqlConnectionManager() : base() { }
 

@@ -37,6 +37,7 @@ namespace ALE.ETLBox.ConnectionManager
         public virtual bool SupportTableTruncate { get; } = false;
         public virtual bool SupportSchemaCleanUp { get; } = false;
         public virtual bool SupportComputedColumns { get; } = false;
+        public virtual bool SupportDescription { get; } = false;
 
         public DbConnectionManager()
         {

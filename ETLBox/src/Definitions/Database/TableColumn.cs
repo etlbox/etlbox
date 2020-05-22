@@ -20,28 +20,28 @@ namespace ALE.ETLBox
         public string DefaultValue { get; set; }
         public string Collation { get; set; }
         public string ComputedColumn { get; set; }
-        public bool HasComputedColumn => !String.IsNullOrWhiteSpace(ComputedColumn);
-        public System.Type NETDataType => Type.GetType(DataTypeConverter.GetNETObjectTypeString(DataType));
-
+        public string Description { get; set; }
+        
+        public bool HasComputedColumn => !string.IsNullOrWhiteSpace(ComputedColumn);
+        
+        public Type NETDataType => Type.GetType(DataTypeConverter.GetNETObjectTypeString(DataType));
 
         public string DataSetColumn
         {
-            get { return String.IsNullOrWhiteSpace(_dataSetColumn) ? Name : _dataSetColumn; }
-            set
-            {
-                _dataSetColumn = value;
-            }
+            get => string.IsNullOrWhiteSpace(_dataSetColumn) ? Name : _dataSetColumn;
+            set => _dataSetColumn = value;
         }
+        
         public string SourceColumn
         {
-            get { return String.IsNullOrWhiteSpace(_sourceColumn) ? Name : _sourceColumn; }
-            set
-            {
-                _sourceColumn = value;
-            }
+            get => string.IsNullOrWhiteSpace(_sourceColumn) ? Name : _sourceColumn;
+            set => _sourceColumn = value;
         }
 
-        public TableColumn() { }
+        public TableColumn()
+        {
+        }
+        
         public TableColumn(string name, string dataType) : this()
         {
             Name = name;

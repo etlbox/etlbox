@@ -47,5 +47,6 @@ namespace ALE.ETLBox.ConnectionManager
         bool SupportSchemaCleanUp { get; }
         bool SupportTableTruncate { get; }
         bool SupportComputedColumns { get; }
+        bool SupportDescription { get; }
     }
 }

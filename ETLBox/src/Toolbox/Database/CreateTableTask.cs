@@ -21,9 +21,11 @@ namespace ALE.ETLBox.ControlFlow
     {
         /* ITask Interface */
         public override string TaskName => $"Create table {TableName}";
+        
         public void Execute()
         {
             CheckTableDefinition();
+            
             bool tableExists = new IfTableOrViewExistsTask(TableName) { ConnectionManager = this.ConnectionManager, DisableLogging = true }.Exists();
             if (tableExists && ThrowErrorIfTableExists) throw new ETLBoxException($"Table {TableName} already exists!");
             if (!tableExists)
@@ -54,8 +56,8 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
 
         public CreateTableTask()
         {
-
         }
+        
         public CreateTableTask(string tableName, List<TableColumn> columns) : this()
         {
             TableDefinition = new TableDefinition(tableName, columns);
@@ -93,14 +95,15 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
             dataType = CreateDataTypeSql(col);
             string identitySql = CreateIdentitySql(col);
             string collationSql = !String.IsNullOrWhiteSpace(col.Collation)
-                                    ? $"COLLATE {col.Collation}"
-                                    : string.Empty;
+                ? $"COLLATE {col.Collation}"
+                : string.Empty;
             string nullSql = CreateNotNullSql(col);
             string defaultSql = CreateDefaultSql(col);
             string computedColumnSql = CreateComputedColumnSql(col);
-            return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql}";
+            string descriptionSql = CreateDescriptionSql(col);
+            
+            return $@"{QB}{col.Name}{QE} {dataType} {collationSql} {defaultSql} {identitySql} {nullSql} {computedColumnSql} {descriptionSql}";
         }
-
 
         private string CreateDataTypeSql(ITableColumn col)
         {
@@ -175,6 +178,14 @@ $@"CREATE TABLE {TN.QuotatedFullName} (
             
             if (col.HasComputedColumn)
                 return $"AS {col.ComputedColumn}";
+            else
+                return string.Empty;
+        }
+        
+        private string CreateDescriptionSql(ITableColumn col)
+        {
+            if (!string.IsNullOrWhiteSpace(col.Description) && DbConnectionManager.SupportDescription)
+                return $"COMMENT '{col.Description}'";
             else
                 return string.Empty;
         }

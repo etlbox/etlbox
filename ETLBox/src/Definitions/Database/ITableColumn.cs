@@ -12,7 +12,8 @@
         string DefaultValue { get; }
         string Collation { get; }
         string ComputedColumn { get; }
+        string Description { get; }
+        
         bool HasComputedColumn { get; }
-
     }
 }

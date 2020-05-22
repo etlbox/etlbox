@@ -181,6 +181,7 @@ SELECT cols.column_name
   , cols.column_default
   , cols.collation_name
   , cols.generation_expression
+  , cols.column_comment
 FROM INFORMATION_SCHEMA.COLUMNS cols
 INNER JOIN  INFORMATION_SCHEMA.TABLES tbl
     ON cols.table_name = tbl.table_name
@@ -206,6 +207,7 @@ ORDER BY cols.ordinal_position
             , column_default => curCol.DefaultValue = column_default?.ToString()
             , collation_name => curCol.Collation = collation_name?.ToString()
             , generation_expression => curCol.ComputedColumn = generation_expression?.ToString()
+            , description => curCol.Description = description?.ToString()
              )
             {
                 DisableLogging = true,

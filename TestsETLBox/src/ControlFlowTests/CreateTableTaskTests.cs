@@ -17,8 +17,10 @@ namespace ALE.ETLBoxTests.ControlFlowTests
         public SqlConnectionManager SqlConnection => Config.SqlConnection.ConnectionManager("ControlFlow");
         public static IEnumerable<object[]> Connections => Config.AllSqlConnections("ControlFlow");
         public static IEnumerable<object[]> Access => Config.AccessConnection("ControlFlow");
+
         public CreateTableTaskTests(ControlFlowDatabaseFixture dbFixture)
-        { }
+        {
+        }
 
         [Theory, MemberData(nameof(Connections))
                 , MemberData(nameof(Access))]
@@ -202,7 +204,6 @@ namespace ALE.ETLBoxTests.ControlFlowTests
             Assert.Contains(td.Columns, col => col.DefaultValue == "3.12");
         }
 
-
         [Theory, MemberData(nameof(Connections))]
         public void CreateTableWithComputedColumn(IConnectionManager connection)
         {
@@ -226,6 +227,34 @@ namespace ALE.ETLBoxTests.ControlFlowTests
                     Assert.Contains(td.Columns, col => col.ComputedColumn == "[value1]*[value2]");
                 else if (connection.GetType() == typeof(MySqlConnectionManager))
                     Assert.Contains(td.Columns, col => col.ComputedColumn == "(`value1` * `value2`)");
+            }
+        }
+        
+        [Theory, MemberData(nameof(Connections))]
+        public void CreateTableWithDescription(IConnectionManager connection)
+        {
+            //Arrange
+            var columns = new List<TableColumn>
+            {
+                new TableColumn("column_1", "INT") { Description = "comment" }
+            };
+
+            //Act
+            CreateTableTask.Create(connection, "TableWithDescription", columns);
+
+            //Assert
+            Assert.True(IfTableOrViewExistsTask.IsExisting(connection, "TableWithDescription"));
+
+            var td = TableDefinition.GetDefinitionFromTableName(connection, "TableWithDescription");
+            var description = td.Columns.Single(x => x.Name == "column_1").Description;
+            
+            if (connection.SupportDescription)
+            {
+                Assert.Equal("comment", description);
+            }
+            else
+            {
+                Assert.Null(description);
             }
         }
 
